@@ -9,7 +9,7 @@ async function getProperty(id: string) {
   try {
     const doc = await db.collection('plots').doc(id).get();
     if (!doc.exists) return null;
-    return { id: doc.id, ...doc.data() };
+    return { id: doc.id, ...doc.data() } as any;
   } catch (error) {
     console.error('Error fetching property:', error);
     return null;
