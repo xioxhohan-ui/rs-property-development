@@ -1,8 +1,9 @@
 import React from 'react';
 import PropertyForm from '../_components/PropertyForm';
 
-export default function NewManageCollectionPage({ params }: { params: { collection: string } }) {
-  const collectionName = params.collection;
+export default async function NewManageCollectionPage({ params }: { params: Promise<{ collection: string }> }) {
+  const resolvedParams = await params;
+  const collectionName = resolvedParams.collection;
   const displayTitle = collectionName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   return (

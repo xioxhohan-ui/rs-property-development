@@ -20,8 +20,9 @@ async function getProperties(collectionName: string) {
   }
 }
 
-export default async function AdminManageCollectionPage({ params }: { params: { collection: string } }) {
-  const collectionName = params.collection;
+export default async function AdminManageCollectionPage({ params }: { params: Promise<{ collection: string }> }) {
+  const resolvedParams = await params;
+  const collectionName = resolvedParams.collection;
   const properties = await getProperties(collectionName);
   
   const displayTitle = collectionName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
