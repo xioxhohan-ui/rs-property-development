@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 async function getProperties() {
   try {
-    const snapshot = await db.collection('plots').orderBy('title').get();
+    const snapshot = await db.collection('properties').orderBy('createdAt', 'desc').get();
     return snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -55,6 +55,7 @@ export default async function AdminPropertiesPage() {
             <thead className="[&_tr]:border-b">
               <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                 <th className="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Property</th>
+                <th className="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Category</th>
                 <th className="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Type</th>
                 <th className="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Location</th>
                 <th className="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Price</th>
@@ -75,6 +76,11 @@ export default async function AdminPropertiesPage() {
                     </div>
                     {plot.title}
                   </td>
+                  <td className="p-4 align-middle">
+                    <span className="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
+                      {plot.category || 'Property'}
+                    </span>
+                  </td>
                   <td className="p-4 align-middle">{plot.type}</td>
                   <td className="p-4 align-middle">{plot.location || plot.district}</td>
                   <td className="p-4 align-middle">{plot.price}</td>
@@ -92,7 +98,7 @@ export default async function AdminPropertiesPage() {
                           <Edit className="h-4 w-4" />
                         </button>
                       </Link>
-                      <DeleteActionButton collectionName="plots" documentId={plot.id} />
+                      <DeleteActionButton collectionName="properties" documentId={plot.id} />
                     </div>
                   </td>
                 </tr>
@@ -100,7 +106,7 @@ export default async function AdminPropertiesPage() {
               
               {properties.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                  <td colSpan={7} className="p-8 text-center text-muted-foreground">
                     No properties found. Add your first property!
                   </td>
                 </tr>

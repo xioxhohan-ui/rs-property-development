@@ -10,6 +10,7 @@ import { signOut } from 'firebase/auth';
 const NAV_LINKS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/properties', label: 'Properties', icon: Building },
+  { href: '/admin/categories', label: 'Categories', icon: FileText },
   { href: '/admin/blogs', label: 'Blogs', icon: FileText },
   { href: '/admin/seo', label: 'SEO Center', icon: TrendingUp },
   { href: '/admin/inquiries', label: 'Inquiries', icon: Mail },

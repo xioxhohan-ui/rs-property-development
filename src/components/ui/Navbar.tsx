@@ -10,8 +10,10 @@ import { Button } from './Button';
 
 const links = [
   { href: '/', label: 'Home' },
-  { href: '/plots', label: 'Plots' },
-  { href: '/map', label: 'Map' },
+  { href: '/property', label: 'Property' },
+  { href: '/land', label: 'Land' },
+  { href: '/ready-flat', label: 'Ready Flat' },
+  { href: '/interior-design', label: 'Interior Design' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
 ];

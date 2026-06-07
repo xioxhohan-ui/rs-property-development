@@ -20,6 +20,7 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
   // Basic Info
   const [title, setTitle] = useState(initialData?.title || '');
   const [slug, setSlug] = useState(initialData?.slug || '');
+  const [category, setCategory] = useState(initialData?.category || 'Property');
   const [type, setType] = useState(initialData?.type || 'Residential');
   const [status, setStatus] = useState(initialData?.status || 'Available');
   
@@ -29,11 +30,13 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
   const [address, setAddress] = useState(initialData?.address || '');
   const [googleMapUrl, setGoogleMapUrl] = useState(initialData?.googleMapUrl || '');
   
-  // Details
+  // Details & Contact
   const [price, setPrice] = useState(initialData?.price || '');
   const [size, setSize] = useState(initialData?.size || '');
   const [description, setDescription] = useState(initialData?.description || '');
   const [youtubeVideo, setYoutubeVideo] = useState(initialData?.youtubeVideo || '');
+  const [whatsappNumber, setWhatsappNumber] = useState(initialData?.whatsappNumber || '');
+  const [contactNumber, setContactNumber] = useState(initialData?.contactNumber || '');
   
   // Toggles
   const [featured, setFeatured] = useState(initialData?.featured || false);
@@ -94,6 +97,7 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
       const propertyData = {
         title,
         slug,
+        category,
         type,
         status,
         district,
@@ -104,6 +108,8 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
         size,
         description,
         youtubeVideo,
+        whatsappNumber,
+        contactNumber,
         featured,
         verified,
         image: finalCoverUrl,
@@ -115,12 +121,12 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
       };
 
       if (mode === 'create') {
-        await addDoc(collection(dbClient, 'plots'), {
+        await addDoc(collection(dbClient, 'properties'), {
           ...propertyData,
           createdAt: serverTimestamp(),
         });
       } else if (initialData?.id) {
-        const docRef = doc(dbClient, 'plots', initialData.id);
+        const docRef = doc(dbClient, 'properties', initialData.id);
         await updateDoc(docRef, propertyData);
       }
 
@@ -158,13 +164,26 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Property Type *</label>
+            <label className="text-sm font-medium">Category *</label>
+            <select required value={category} onChange={(e) => setCategory(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+              <option value="Property">Property</option>
+              <option value="Land">Land</option>
+              <option value="Ready Flat">Ready Flat</option>
+              <option value="Interior Design">Interior Design</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Sub-Type *</label>
             <select required value={type} onChange={(e) => setType(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
               <option value="Residential">Residential</option>
               <option value="Commercial">Commercial</option>
               <option value="Agricultural">Agricultural</option>
+              <option value="Industrial">Industrial</option>
               <option value="Shop">Shop</option>
               <option value="Flat">Flat</option>
+              <option value="Studio">Studio</option>
+              <option value="Duplex">Duplex</option>
               <option value="Plot">Plot</option>
             </select>
           </div>
@@ -214,6 +233,17 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
         <div className="space-y-2 mb-6">
           <label className="text-sm font-medium">Property Description</label>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={5} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Describe the property..." />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Contact Number</label>
+            <input value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="e.g., +880 1XXXXXXXXX" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">WhatsApp Number</label>
+            <input value={whatsappNumber} onChange={(e) => setWhatsappNumber(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="e.g., +880 1XXXXXXXXX" />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
