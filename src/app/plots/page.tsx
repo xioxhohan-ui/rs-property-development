@@ -9,10 +9,16 @@ export const dynamic = 'force-dynamic';
 async function getAllPlots() {
   try {
     const snapshot = await db.collection('plots').get();
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      // Remove complex timestamp objects which cannot be passed to Client Components
+      delete data.createdAt;
+      delete data.updatedAt;
+      return {
+        id: doc.id,
+        ...data
+      };
+    }) as any[];
   } catch (error) {
     console.error('Error fetching all plots:', error);
     return [];

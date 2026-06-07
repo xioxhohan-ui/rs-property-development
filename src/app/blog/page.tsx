@@ -16,10 +16,15 @@ export const dynamic = 'force-dynamic';
 async function getBlogPosts() {
   try {
     const snapshot = await db.collection('posts').get();
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      delete data.createdAt;
+      delete data.updatedAt;
+      return {
+        id: doc.id,
+        ...data
+      };
+    }) as any[];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
