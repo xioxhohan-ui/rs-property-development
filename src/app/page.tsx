@@ -51,7 +51,18 @@ export default async function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredPlots.map((plot) => (
-              <PlotCard key={plot.id} {...plot} />
+              <PlotCard 
+                key={plot.id} 
+                id={plot.id}
+                slug={`property/${plot.slug}`}
+                title={plot.title}
+                location={plot.address || plot.area || plot.district || 'Location unlisted'}
+                price={plot.price}
+                size={plot.size}
+                type={plot.type}
+                verified={plot.verified}
+                image={plot.coverImage || plot.image || plot.images?.[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'}
+              />
             ))}
           </div>
           

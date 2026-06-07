@@ -62,7 +62,9 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
     notFound();
   }
 
+  const defaultImage = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80';
   const allImages = [property.coverImage, property.image, ...(property.galleryImages || []), ...(property.images || [])].filter(Boolean);
+  if (allImages.length === 0) allImages.push(defaultImage);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 pb-28 lg:pb-12">
@@ -93,7 +95,7 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
             {/* Gallery */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border">
               <div className="relative h-[400px] w-full rounded-lg overflow-hidden mb-4">
-                <Image src={allImages[activeImage]} alt="Property Image" fill className="object-cover" />
+                <Image src={allImages[activeImage] || defaultImage} alt="Property Image" fill className="object-cover" />
               </div>
               {allImages.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory touch-pan-x scrollbar-hide">
@@ -157,7 +159,7 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border">
               <h3 className="font-bold text-lg mb-4">Quick Details</h3>
               <ul className="space-y-3 text-sm">
-                <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Property ID</span><span className="font-medium">{property.id.slice(0, 8).toUpperCase()}</span></li>
+                <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Property ID</span><span className="font-medium">{property.id?.slice(0, 8).toUpperCase() || 'N/A'}</span></li>
                 <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Category</span><span className="font-medium">{property.category}</span></li>
                 <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Type</span><span className="font-medium">{property.type}</span></li>
                 <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Size</span><span className="font-medium">{property.size || 'N/A'}</span></li>
@@ -192,7 +194,7 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
                   size={prop.size}
                   type={prop.type}
                   verified={prop.verified}
-                  image={prop.image || prop.images?.[0]}
+                  image={prop.coverImage || prop.image || prop.images?.[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'}
                 />
               ))}
             </div>
