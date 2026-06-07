@@ -2,9 +2,10 @@
 
 :root {
   --primary-color: #FFFFFF;
-  --secondary-color: #F8F9FA;
-  --accent-color: #C9A227;
-  --text-color: #111111;
+  --secondary-color: #FAFAFA; /* Soft White */
+  --accent-color: #1E466B; /* Bold Blue */
+  --light-accent: #67BAF4; /* Light Blue */
+  --text-color: #0D0D0D; /* Jet Black */
   --text-muted: #6c757d;
   --success-color: #28A745;
   --border-color: #E5E7EB;
