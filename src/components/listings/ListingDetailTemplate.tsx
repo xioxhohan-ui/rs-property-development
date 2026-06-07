@@ -6,6 +6,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import Image from 'next/image';
 import { MapPin, Phone, MessageCircle, Share2, Maximize2, ShieldCheck, Mail } from 'lucide-react';
 import { PlotCard } from '@/components/ui/PlotCard';
+import InquiryForm from '@/components/listings/InquiryForm';
 
 interface ListingDetailTemplateProps {
   slug: string;
@@ -145,9 +146,6 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
                 <a href={`https://wa.me/${(property.whatsappNumber || '+8801814963730').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 lg:py-3 rounded-lg font-medium hover:bg-[#20b858] transition-colors text-sm lg:text-base">
                   <MessageCircle size={18} /> <span className="hidden sm:inline">WhatsApp</span>
                 </a>
-                <button className="hidden lg:flex items-center justify-center w-full gap-2 border border-input bg-background py-3 rounded-lg font-medium hover:bg-accent transition-colors">
-                  <Mail size={18} /> Send Email Inquiry
-                </button>
                 <div className="hidden lg:flex pt-4 mt-4 border-t justify-center gap-4 text-muted-foreground">
                   <button className="flex flex-col items-center hover:text-primary transition-colors"><Share2 size={20} /><span className="text-xs mt-1">Share</span></button>
                 </div>
@@ -164,6 +162,15 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
                 <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Size</span><span className="font-medium">{property.size || 'N/A'}</span></li>
                 {property.district && <li className="flex justify-between pb-2"><span className="text-muted-foreground">District</span><span className="font-medium">{property.district}</span></li>}
               </ul>
+            </div>
+
+            {/* Inquiry Form */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border mt-8 lg:mt-0">
+              <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                <Mail size={18} className="text-primary" />
+                Send Inquiry
+              </h3>
+              <InquiryForm propertyId={property.id} propertyTitle={property.title} category={property.category || category} />
             </div>
           </div>
         </div>

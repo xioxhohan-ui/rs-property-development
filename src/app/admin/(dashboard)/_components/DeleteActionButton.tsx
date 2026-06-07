@@ -6,6 +6,8 @@ import { dbClient } from '@/lib/firebase/client';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { Trash2, Loader2 } from 'lucide-react';
 
+import { useToast } from '@/components/ui/Toast';
+
 interface DeleteActionButtonProps {
   collectionName: string;
   documentId: string;
@@ -14,19 +16,26 @@ interface DeleteActionButtonProps {
 export default function DeleteActionButton({ collectionName, documentId }: DeleteActionButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
+  const toast = useToast();
 
   const handleDelete = async () => {
-    if (!window.confirm(`Are you sure you want to delete this ${collectionName.slice(0, -1)}? This action cannot be undone.`)) {
-      return;
-    }
+    const isOk = await toast.confirm({
+      title: 'Confirm Delete',
+      message: `Are you sure you want to delete this ${collectionName.slice(0, -1)}? This action cannot be undone.`,
+      danger: true,
+      confirmLabel: 'Delete',
+    });
+
+    if (!isOk) return;
 
     setIsDeleting(true);
     try {
       await deleteDoc(doc(dbClient, collectionName, documentId));
+      toast.success('Deleted', 'Item has been deleted successfully.');
       router.refresh();
     } catch (error) {
       console.error(`Error deleting document from ${collectionName}:`, error);
-      alert('Failed to delete. Please try again.');
+      toast.error('Delete Failed', 'Failed to delete the item. Please try again.');
     } finally {
       setIsDeleting(false);
     }

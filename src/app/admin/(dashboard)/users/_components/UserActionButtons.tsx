@@ -6,20 +6,29 @@ import { dbClient } from '@/lib/firebase/client';
 import { doc, updateDoc } from 'firebase/firestore';
 import { ShieldAlert, UserX, UserCheck, Loader2 } from 'lucide-react';
 
+import { useToast } from '@/components/ui/Toast';
+
 export default function UserActionButtons({ userId, currentStatus, currentRole }: { userId: string, currentStatus: string, currentRole: string }) {
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
+  const toast = useToast();
 
   const handleStatusChange = async (newStatus: string) => {
-    if (!window.confirm(`Are you sure you want to change user status to ${newStatus}?`)) return;
+    const ok = await toast.confirm({
+      title: 'Change User Status',
+      message: `Are you sure you want to change user status to ${newStatus}?`,
+      confirmLabel: 'Yes, change status'
+    });
+    if (!ok) return;
     
     setLoading(newStatus);
     try {
       await updateDoc(doc(dbClient, 'users', userId), { status: newStatus });
+      toast.success('Status Updated', `User status changed to ${newStatus}.`);
       router.refresh();
     } catch (error) {
       console.error('Error updating user status:', error);
-      alert('Failed to update status. Ensure you have Super Admin privileges.');
+      toast.error('Update Failed', 'Failed to update status. Ensure you have Super Admin privileges.');
     } finally {
       setLoading(null);
     }
@@ -27,15 +36,21 @@ export default function UserActionButtons({ userId, currentStatus, currentRole }
 
   const handleRoleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newRole = e.target.value;
-    if (!window.confirm(`Are you sure you want to change this user's role to ${newRole}?`)) return;
+    const ok = await toast.confirm({
+      title: 'Change User Role',
+      message: `Are you sure you want to change this user's role to ${newRole}?`,
+      confirmLabel: 'Yes, change role'
+    });
+    if (!ok) return;
     
     setLoading('role');
     try {
       await updateDoc(doc(dbClient, 'users', userId), { role: newRole });
+      toast.success('Role Updated', `User role changed to ${newRole}.`);
       router.refresh();
     } catch (error) {
       console.error('Error updating user role:', error);
-      alert('Failed to update role. Ensure you have Super Admin privileges.');
+      toast.error('Update Failed', 'Failed to update role. Ensure you have Super Admin privileges.');
     } finally {
       setLoading(null);
     }

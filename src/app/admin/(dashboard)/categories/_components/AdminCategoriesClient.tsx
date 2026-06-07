@@ -6,11 +6,14 @@ import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/fi
 import { Plus, Trash2, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import { useToast } from '@/components/ui/Toast';
+
 export default function AdminCategoriesClient({ initialCategories }: { initialCategories: any[] }) {
   const [categories, setCategories] = useState(initialCategories);
   const [newTitle, setNewTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const toast = useToast();
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,24 +38,33 @@ export default function AdminCategoriesClient({ initialCategories }: { initialCa
         createdAt: new Date().toISOString()
       }]);
       setNewTitle('');
+      toast.success('Category Added', `Successfully added category "${newTitle}".`);
       router.refresh();
     } catch (error) {
       console.error('Error adding category:', error);
-      alert('Failed to add category');
+      toast.error('Add Failed', 'Failed to add category');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
+    const ok = await toast.confirm({
+      title: 'Delete Category',
+      message: 'Are you sure you want to delete this category?',
+      danger: true,
+      confirmLabel: 'Delete'
+    });
+    if (!ok) return;
+
     try {
       await deleteDoc(doc(dbClient, 'categories', id));
       setCategories(categories.filter(c => c.id !== id));
+      toast.success('Category Deleted');
       router.refresh();
     } catch (error) {
       console.error('Error deleting category:', error);
-      alert('Failed to delete category');
+      toast.error('Delete Failed', 'Failed to delete category');
     }
   };
 

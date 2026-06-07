@@ -12,6 +12,8 @@ import {
   Minus, TrendingUp, Search, RefreshCw
 } from 'lucide-react';
 
+import { useToast } from '@/components/ui/Toast';
+
 const DIFFICULTY_COLORS: Record<string, string> = {
   Easy: 'bg-emerald-100 text-emerald-700',
   Medium: 'bg-amber-100 text-amber-700',
@@ -30,6 +32,7 @@ export default function KeywordsPage() {
   const [form, setForm] = useState({
     keyword: '', pos: '', prevPos: '', volume: '', kd: '50', cpc: '', traffic: '', competition: 'Medium'
   });
+  const toast = useToast();
 
   // Real-time Firestore listener
   useEffect(() => {
@@ -58,17 +61,25 @@ export default function KeywordsPage() {
         updatedAt: serverTimestamp(),
       });
       setForm({ keyword: '', pos: '', prevPos: '', volume: '', kd: '50', cpc: '', traffic: '', competition: 'Medium' });
+      toast.success('Keyword Added');
     } catch (err) {
       console.error(err);
-      alert('Failed to add keyword');
+      toast.error('Add Failed', 'Failed to add keyword');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this keyword?')) return;
+    const ok = await toast.confirm({
+      title: 'Delete Keyword',
+      message: 'Are you sure you want to delete this keyword?',
+      danger: true,
+      confirmLabel: 'Delete'
+    });
+    if (!ok) return;
     await deleteDoc(doc(dbClient, 'seo_keywords', id));
+    toast.success('Keyword Deleted');
   };
 
   const handleUpdatePos = async (id: string, newPos: number, currentPos: number) => {

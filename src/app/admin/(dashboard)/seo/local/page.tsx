@@ -6,6 +6,8 @@ import { dbClient } from '@/lib/firebase/client';
 import { collection, onSnapshot, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Plus, Trash2, Loader2, Globe, MapPin, ArrowUpRight, Building2 } from 'lucide-react';
 
+import { useToast } from '@/components/ui/Toast';
+
 const BD_DISTRICTS = [
   'Dhaka', 'Gazipur', 'Narayanganj', 'Sylhet', 'Chattogram', 'Khulna',
   'Rajshahi', 'Barishal', 'Rangpur', 'Mymensingh', 'Cumilla', 'Bogura',
@@ -29,6 +31,7 @@ export default function LocalSEOPage() {
   const [pages, setPages] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ district: 'Dhaka', type: 'Plot', customTitle: '', customDesc: '' });
+  const toast = useToast();
 
   useEffect(() => {
     const q = query(collection(dbClient, 'seo_local_pages'), orderBy('createdAt', 'desc'));
@@ -54,13 +57,24 @@ export default function LocalSEOPage() {
         createdAt: serverTimestamp(),
       });
       setForm({ district: 'Dhaka', type: 'Plot', customTitle: '', customDesc: '' });
+      toast.success('Page Created', `Local SEO page for ${form.type} in ${form.district} created.`);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed', 'Failed to create local SEO page.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleBulkGenerate = async () => {
-    if (!confirm(`Generate SEO pages for all ${BD_DISTRICTS.length} districts × ${PROPERTY_TYPES.length} types = ${BD_DISTRICTS.length * PROPERTY_TYPES.length} pages?`)) return;
+    const total = BD_DISTRICTS.length * PROPERTY_TYPES.length;
+    const ok = await toast.confirm({
+      title: 'Bulk Generate Pages',
+      message: `Generate SEO pages for all ${BD_DISTRICTS.length} districts × ${PROPERTY_TYPES.length} types = ${total} pages?`,
+      confirmLabel: 'Generate All'
+    });
+    if (!ok) return;
+
     setLoading(true);
     try {
       for (const district of BD_DISTRICTS) {
@@ -75,13 +89,26 @@ export default function LocalSEOPage() {
           });
         }
       }
+      toast.success('Bulk Generation Complete', `Successfully created ${total} local SEO pages.`);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed', 'An error occurred during bulk generation.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
+    const ok = await toast.confirm({
+      title: 'Delete Page',
+      message: 'Are you sure you want to delete this page?',
+      danger: true,
+      confirmLabel: 'Delete'
+    });
+    if (!ok) return;
+
     await deleteDoc(doc(dbClient, 'seo_local_pages', id));
+    toast.success('Page Deleted');
   };
 
   return (

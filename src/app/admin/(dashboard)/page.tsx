@@ -26,6 +26,17 @@ async function getDashboardStats() {
 
     const blogsCount = await db.collection('posts').count().get();
     
+    const inquiriesSnap = await db.collection('inquiries').get();
+    let totalInquiries = 0;
+    let newInquiries = 0;
+    
+    inquiriesSnap.forEach(doc => {
+      totalInquiries++;
+      if (doc.data().status === 'New') {
+        newInquiries++;
+      }
+    });
+    
     // Sort combined recent by createdAt
     recentProperties.sort((a, b) => {
       const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
@@ -37,7 +48,9 @@ async function getDashboardStats() {
       totalProperties: totalCount,
       publishedProperties: publishedCount,
       totalBlogs: blogsCount.data().count || 0,
-      recentProperties: recentProperties.slice(0, 5)
+      recentProperties: recentProperties.slice(0, 5),
+      totalInquiries,
+      newInquiries
     };
   } catch (error) {
     console.error('Error fetching admin stats:', error);
@@ -45,7 +58,9 @@ async function getDashboardStats() {
       totalProperties: 0,
       publishedProperties: 0,
       totalBlogs: 0,
-      recentProperties: []
+      recentProperties: [],
+      totalInquiries: 0,
+      newInquiries: 0
     };
   }
 }
@@ -77,12 +92,12 @@ export default async function AdminDashboardOverview() {
 
         <div className="rounded-xl border bg-card text-card-foreground shadow">
           <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium">Active Inquiries</h3>
+            <h3 className="tracking-tight text-sm font-medium">New Leads / Inquiries</h3>
             <Users className="h-4 w-4 text-muted-foreground" />
           </div>
           <div className="p-6 pt-0">
-            <div className="text-2xl font-bold">--</div>
-            <p className="text-xs text-muted-foreground">Feature coming soon</p>
+            <div className="text-2xl font-bold text-blue-600">{stats.newInquiries}</div>
+            <p className="text-xs text-muted-foreground">Action required</p>
           </div>
         </div>
 
@@ -98,12 +113,12 @@ export default async function AdminDashboardOverview() {
 
         <div className="rounded-xl border bg-card text-card-foreground shadow">
           <div className="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium">Total Leads</h3>
+            <h3 className="tracking-tight text-sm font-medium">Total Lifetime Leads</h3>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </div>
           <div className="p-6 pt-0">
-            <div className="text-2xl font-bold">--</div>
-            <p className="text-xs text-muted-foreground">Feature coming soon</p>
+            <div className="text-2xl font-bold">{stats.totalInquiries}</div>
+            <p className="text-xs text-muted-foreground">Inquiries received</p>
           </div>
         </div>
 

@@ -6,11 +6,15 @@ import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import styles from './Contact.module.css';
 
+import { useToast } from '@/components/ui/Toast';
+
 export default function ContactPage() {
+  const toast = useToast();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate form submission
-    alert('Thank you for contacting us. We will get back to you shortly.');
+    toast.success('Message Sent', 'Thank you for contacting us. We will get back to you shortly.');
   };
 
   return (

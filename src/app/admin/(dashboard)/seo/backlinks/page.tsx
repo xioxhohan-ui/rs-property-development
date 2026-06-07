@@ -6,6 +6,8 @@ import { dbClient } from '@/lib/firebase/client';
 import { collection, onSnapshot, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Plus, Trash2, Loader2, Link as LinkIcon, ArrowUpRight, ArrowDownRight, TrendingUp, Globe, Shield } from 'lucide-react';
 
+import { useToast } from '@/components/ui/Toast';
+
 const BACKLINK_TYPES: Record<string, string> = {
   dofollow: 'bg-emerald-100 text-emerald-700',
   nofollow: 'bg-gray-100 text-gray-600',
@@ -17,6 +19,7 @@ export default function BacklinksPage() {
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ source: '', targetPage: '/', anchorText: '', type: 'dofollow', da: '', status: 'Active' });
+  const toast = useToast();
 
   useEffect(() => {
     const q = query(collection(dbClient, 'seo_backlinks'), orderBy('createdAt', 'desc'));
@@ -35,14 +38,26 @@ export default function BacklinksPage() {
         createdAt: serverTimestamp(),
       });
       setForm({ source: '', targetPage: '/', anchorText: '', type: 'dofollow', da: '', status: 'Active' });
+      toast.success('Backlink Added');
+    } catch (err) {
+      console.error(err);
+      toast.error('Add Failed', 'Failed to add backlink');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Remove this backlink?')) return;
+    const ok = await toast.confirm({
+      title: 'Remove Backlink',
+      message: 'Are you sure you want to remove this backlink?',
+      danger: true,
+      confirmLabel: 'Remove'
+    });
+    if (!ok) return;
+    
     await deleteDoc(doc(dbClient, 'seo_backlinks', id));
+    toast.success('Backlink Removed');
   };
 
   const totalDA = backlinks.length > 0 ? Math.round(backlinks.reduce((s, b) => s + (b.da || 0), 0) / backlinks.length) : 0;
