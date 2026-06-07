@@ -56,7 +56,7 @@ export default async function BlogPage() {
           {blogPosts.map((post) => (
             <div key={post.id} className={styles.card}>
               <Link href={`/blog/${post.slug}`} className={styles.imageWrapper}>
-                <Image src={post.image} alt={post.title} fill className={styles.image} />
+                <Image src={post.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'} alt={post.title || 'Blog Post'} fill className={styles.image} />
                 <span className={styles.categoryBadge}>{post.category}</span>
               </Link>
               
