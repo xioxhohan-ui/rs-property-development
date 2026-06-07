@@ -2,17 +2,18 @@
 
 import React, { useState } from 'react';
 import { dbClient } from '@/lib/firebase/client';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { writeBatch, doc, collection, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/components/ui/Toast';
 import { Loader2 } from 'lucide-react';
 
 interface InquiryFormProps {
   propertyId: string;
   propertyTitle: string;
+  propertySlug: string;
   category: string;
 }
 
-export default function InquiryForm({ propertyId, propertyTitle, category }: InquiryFormProps) {
+export default function InquiryForm({ propertyId, propertyTitle, propertySlug, category }: InquiryFormProps) {
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -28,18 +29,42 @@ export default function InquiryForm({ propertyId, propertyTitle, category }: Inq
     setLoading(true);
 
     try {
-      await addDoc(collection(dbClient, 'inquiries'), {
+      const batch = writeBatch(dbClient);
+
+      const inquiryRef = doc(collection(dbClient, 'property_inquiries'));
+      batch.set(inquiryRef, {
         propertyId,
         propertyTitle,
+        propertySlug,
         category,
-        name: form.name,
+        customerName: form.name,
+        customerPhone: form.phone,
+        customerEmail: form.email,
+        message: form.message,
+        preferredContactMethod: form.preferredContact,
+        status: 'new',
+        assignedAgent: '',
+        adminNotes: '',
+        source: 'Website',
+        ipRegion: 'Unknown',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+
+      const leadRef = doc(collection(dbClient, 'leads'));
+      batch.set(leadRef, {
+        leadId: leadRef.id,
+        inquiryId: inquiryRef.id,
+        customerName: form.name,
         phone: form.phone,
         email: form.email,
-        message: form.message,
-        preferredContact: form.preferredContact,
-        status: 'New', // New, Contacted, Follow Up, Qualified, Closed
+        propertyId,
+        status: 'new',
+        assignedAgent: '',
         createdAt: serverTimestamp(),
       });
+
+      await batch.commit();
 
       toast.success('Inquiry Sent', 'Thank you! We have received your inquiry and will contact you shortly.');
       setForm(prev => ({ ...prev, name: '', phone: '', email: '', message: 'I am interested in this property. Please contact me with more details.' }));

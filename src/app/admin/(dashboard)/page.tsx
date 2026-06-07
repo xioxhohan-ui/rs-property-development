@@ -26,13 +26,14 @@ async function getDashboardStats() {
 
     const blogsCount = await db.collection('posts').count().get();
     
-    const inquiriesSnap = await db.collection('inquiries').get();
+    const inquiriesSnap = await db.collection('property_inquiries').get();
     let totalInquiries = 0;
     let newInquiries = 0;
     
     inquiriesSnap.forEach(doc => {
       totalInquiries++;
-      if (doc.data().status === 'New') {
+      const status = doc.data().status;
+      if (status === 'new' || status === 'New') {
         newInquiries++;
       }
     });

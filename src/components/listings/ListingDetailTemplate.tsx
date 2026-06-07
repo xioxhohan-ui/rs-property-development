@@ -170,7 +170,7 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
                 <Mail size={18} className="text-primary" />
                 Send Inquiry
               </h3>
-              <InquiryForm propertyId={property.id} propertyTitle={property.title} category={property.category || category} />
+              <InquiryForm propertyId={property.id} propertyTitle={property.title} propertySlug={property.slug || slug} category={property.category || category} />
             </div>
           </div>
         </div>
