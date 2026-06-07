@@ -110,9 +110,10 @@
 .heroImage {
   width: 100%;
   height: auto;
-  max-height: 70vh;
+  max-height: 85vh; /* Increased from 70vh */
   object-fit: contain;
   display: block;
+  transform: scale(1.4); /* Scaled up to compensate for transparent padding */
   filter: drop-shadow(0 20px 30px rgba(31, 61, 45, 0.15));
 }
 
@@ -160,4 +161,47 @@
   background: radial-gradient(circle, rgba(31, 61, 45, 0.1) 0%, rgba(31, 61, 45, 0) 70%);
   top: 40%;
   left: 45%;
+}
+
+/* New small decorative objects */
+.decor4 {
+  width: 20px;
+  height: 20px;
+  background: var(--bold-blue);
+  border-radius: 4px;
+  top: 20%;
+  right: 15%;
+  opacity: 0.15;
+  filter: drop-shadow(0 5px 10px rgba(31, 61, 45, 0.1));
+}
+
+.decor5 {
+  width: 35px;
+  height: 35px;
+  background: var(--light-accent);
+  border-radius: 50%;
+  top: 60%;
+  right: 35%;
+  opacity: 0.25;
+}
+
+.decor6 {
+  width: 15px;
+  height: 15px;
+  background: var(--text-color);
+  border-radius: 50%;
+  bottom: 30%;
+  right: 10%;
+  opacity: 0.1;
+}
+
+.decor7 {
+  width: 45px;
+  height: 45px;
+  border: 2px solid var(--light-accent);
+  background: transparent;
+  border-radius: 8px;
+  top: 15%;
+  left: 40%;
+  opacity: 0.2;
 }

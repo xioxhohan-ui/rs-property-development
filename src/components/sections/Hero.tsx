@@ -26,6 +26,27 @@ export const Hero = () => {
           animate={{ y: [0, -10, 0], scale: [1, 1.05, 1] }}
           transition={{ repeat: Infinity, duration: 7, ease: "easeInOut", delay: 2 }}
         />
+        {/* New Small Objects */}
+        <motion.div 
+          className={`${styles.decorObject} ${styles.decor4}`}
+          animate={{ y: [0, -30, 0], x: [0, 10, 0], rotate: [0, 45, 0] }}
+          transition={{ repeat: Infinity, duration: 9, ease: "easeInOut", delay: 0.5 }}
+        />
+        <motion.div 
+          className={`${styles.decorObject} ${styles.decor5}`}
+          animate={{ y: [0, 20, 0], x: [0, -15, 0], rotate: [0, -45, 0] }}
+          transition={{ repeat: Infinity, duration: 12, ease: "easeInOut", delay: 3 }}
+        />
+        <motion.div 
+          className={`${styles.decorObject} ${styles.decor6}`}
+          animate={{ y: [0, -15, 0], scale: [1, 1.2, 1] }}
+          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut", delay: 1.5 }}
+        />
+        <motion.div 
+          className={`${styles.decorObject} ${styles.decor7}`}
+          animate={{ y: [0, 25, 0], x: [0, 20, 0] }}
+          transition={{ repeat: Infinity, duration: 15, ease: "easeInOut", delay: 4 }}
+        />
       </div>
 
       <div className={`container ${styles.container}`}>
