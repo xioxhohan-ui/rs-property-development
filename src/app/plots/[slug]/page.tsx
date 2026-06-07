@@ -71,14 +71,14 @@ export default async function PlotDetailPage({ params }: { params: Promise<{ slu
         {/* Gallery */}
         <div className={styles.gallery}>
           <div className={styles.mainImage}>
-            <Image src={plot.image || plot.images?.[0]} alt={plot.title} fill className={styles.img} />
+            <Image src={plot.image || plot.images?.[0] || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'} alt={plot.title || 'Property'} fill className={styles.img} />
           </div>
           <div className={styles.sideImages}>
             <div className={styles.sideImage}>
-              <Image src={plot.images?.[1] || plot.image} alt={plot.title} fill className={styles.img} />
+              <Image src={plot.images?.[1] || plot.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'} alt={plot.title || 'Property'} fill className={styles.img} />
             </div>
             <div className={styles.sideImage}>
-              <Image src={plot.images?.[2] || plot.image} alt={plot.title} fill className={styles.img} />
+              <Image src={plot.images?.[2] || plot.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'} alt={plot.title || 'Property'} fill className={styles.img} />
             </div>
           </div>
         </div>

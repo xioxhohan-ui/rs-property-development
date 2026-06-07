@@ -38,8 +38,8 @@ export const PlotCard: React.FC<PlotCardProps> = ({
       <Link href={`/plots/${slug}`} className={styles.imageWrapper}>
         <div className={styles.imageContainer}>
           <Image
-            src={image}
-            alt={title}
+            src={image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'}
+            alt={title || 'Property'}
             fill
             className={styles.image}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
