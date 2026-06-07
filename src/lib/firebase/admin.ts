@@ -2,15 +2,21 @@ import * as admin from 'firebase-admin';
 
 if (!admin.apps.length) {
   try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        // Replace escaped newline characters from .env variable
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      }),
-    });
-    console.log('Firebase Admin Initialized Successfully');
+    if (process.env.FIREBASE_PRIVATE_KEY) {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          // Replace escaped newline characters from .env variable
+          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        }),
+      });
+      console.log('Firebase Admin Initialized Successfully');
+    } else {
+      // Fallback for Vercel build step where env vars might be missing
+      admin.initializeApp({ projectId: 'dummy-build-project' });
+      console.warn('Firebase Admin initialized with dummy project for build step');
+    }
   } catch (error) {
     console.error('Firebase Admin Initialization Error:', error);
   }
