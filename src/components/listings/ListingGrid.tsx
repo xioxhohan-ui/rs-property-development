@@ -7,21 +7,18 @@ import { PlotCard } from '@/components/ui/PlotCard';
 
 interface ListingGridProps {
   filterCategory: string;
+  collectionName?: string;
 }
 
-export default function ListingGrid({ filterCategory }: ListingGridProps) {
+export default function ListingGrid({ filterCategory, collectionName = 'properties' }: ListingGridProps) {
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // We use onSnapshot for real-time updates as requested by the user
-    // Querying the unified 'properties' collection by category
     const q = query(
-      collection(dbClient, 'properties'),
-      where('category', '==', filterCategory),
-      where('status', '==', 'Available'),
-      // Note: Ordering might require a composite index in Firestore depending on data
-      // orderBy('createdAt', 'desc') 
+      collection(dbClient, collectionName),
+      where('status', '==', 'Available')
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {

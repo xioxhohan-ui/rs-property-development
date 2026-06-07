@@ -27,7 +27,13 @@ export default function AdminCategoriesClient({ initialCategories }: { initialCa
       };
       
       const docRef = await addDoc(collection(dbClient, 'categories'), newCategoryData);
-      setCategories([...categories, { id: docRef.id, ...newCategoryData }]);
+      setCategories([...categories, { 
+        id: docRef.id, 
+        title: newTitle,
+        slug,
+        order: categories.length,
+        createdAt: new Date().toISOString()
+      }]);
       setNewTitle('');
       router.refresh();
     } catch (error) {

@@ -7,10 +7,14 @@ export const dynamic = 'force-dynamic';
 async function getCategories() {
   try {
     const snapshot = await db.collection('categories').orderBy('order').get();
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : new Date().toISOString()
+      };
+    }) as any[];
   } catch (error) {
     console.error('Error fetching categories:', error);
     return [];

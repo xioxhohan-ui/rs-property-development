@@ -9,7 +9,10 @@ import { signOut } from 'firebase/auth';
 
 const NAV_LINKS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/properties', label: 'Properties', icon: Building },
+  { href: '/admin/manage/properties', label: 'Properties', icon: Building },
+  { href: '/admin/manage/lands', label: 'Lands', icon: Map },
+  { href: '/admin/manage/ready_flats', label: 'Ready Flats', icon: Building },
+  { href: '/admin/manage/interior_projects', label: 'Interior Design', icon: LayoutDashboard },
   { href: '/admin/categories', label: 'Categories', icon: FileText },
   { href: '/admin/blogs', label: 'Blogs', icon: FileText },
   { href: '/admin/seo', label: 'SEO Center', icon: TrendingUp },

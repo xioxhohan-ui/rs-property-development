@@ -12,6 +12,7 @@ export default function LandPage() {
       title="Land & Plots" 
       subtitle="Find the perfect plot to build your dream home or commercial project. Verified and secure."
       category="Land"
+      collectionName="lands"
     />
   );
 }

@@ -7,25 +7,37 @@ export const dynamic = 'force-dynamic';
 
 async function getDashboardStats() {
   try {
-    const propertiesCount = await db.collection('plots').count().get();
-    const publishedProps = await db.collection('plots').where('status', '==', 'Available').count().get();
+    const collections = ['properties', 'lands', 'ready_flats', 'interior_projects'];
+    let totalCount = 0;
+    let publishedCount = 0;
+    let recentProperties: any[] = [];
+
+    for (const coll of collections) {
+      const allCount = await db.collection(coll).count().get();
+      totalCount += allCount.data().count || 0;
+
+      const pubCount = await db.collection(coll).where('status', '==', 'Available').count().get();
+      publishedCount += pubCount.data().count || 0;
+
+      const recentSnap = await db.collection(coll).orderBy('createdAt', 'desc').limit(2).get();
+      const recent = recentSnap.docs.map(doc => ({ id: doc.id, collectionName: coll, ...doc.data() }));
+      recentProperties = [...recentProperties, ...recent];
+    }
+
     const blogsCount = await db.collection('posts').count().get();
     
-    // Fetch 5 most recent properties
-    const recentPropsSnapshot = await db.collection('plots')
-      .limit(5)
-      .get();
-      
-    const recentProperties = recentPropsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
+    // Sort combined recent by createdAt
+    recentProperties.sort((a, b) => {
+      const dateA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+      const dateB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+      return dateB - dateA;
+    });
 
     return {
-      totalProperties: propertiesCount.data().count || 0,
-      publishedProperties: publishedProps.data().count || 0,
+      totalProperties: totalCount,
+      publishedProperties: publishedCount,
       totalBlogs: blogsCount.data().count || 0,
-      recentProperties
+      recentProperties: recentProperties.slice(0, 5)
     };
   } catch (error) {
     console.error('Error fetching admin stats:', error);
@@ -112,16 +124,20 @@ export default async function AdminDashboardOverview() {
               {stats.recentProperties.map((plot) => (
                 <div key={plot.id} className="flex items-center">
                   <div className="bg-muted h-9 w-9 rounded-md flex items-center justify-center overflow-hidden">
-                    {plot.image ? (
-                       <img src={plot.image} alt={plot.title} className="h-full w-full object-cover" />
+                    {plot.image || plot.coverImage ? (
+                       <img src={plot.image || plot.coverImage} alt={plot.title} className="h-full w-full object-cover" />
                     ) : (
                        <Home className="h-5 w-5 text-primary" />
                     )}
                   </div>
                   <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none">{plot.title}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {plot.type} • {plot.size}
+                    <p className="text-sm font-medium leading-none">
+                      <a href={`/admin/manage/${plot.collectionName}/${plot.id}`} className="hover:underline">
+                        {plot.title}
+                      </a>
+                    </p>
+                    <p className="text-sm text-muted-foreground capitalize">
+                      {plot.collectionName.replace('_', ' ')} • {plot.type}
                     </p>
                   </div>
                   <div className="ml-auto font-medium">

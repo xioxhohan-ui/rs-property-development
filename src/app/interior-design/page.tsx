@@ -12,6 +12,7 @@ export default function InteriorDesignPage() {
       title="Interior Design" 
       subtitle="Transform your space. View our modern and luxurious interior design projects across Bangladesh."
       category="Interior Design"
+      collectionName="interior_projects"
     />
   );
 }

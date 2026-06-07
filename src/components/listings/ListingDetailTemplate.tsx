@@ -10,9 +10,10 @@ import { PlotCard } from '@/components/ui/PlotCard';
 interface ListingDetailTemplateProps {
   slug: string;
   category: string;
+  collectionName?: string;
 }
 
-export default function ListingDetailTemplate({ slug, category }: ListingDetailTemplateProps) {
+export default function ListingDetailTemplate({ slug, category, collectionName = 'properties' }: ListingDetailTemplateProps) {
   const [property, setProperty] = useState<any>(null);
   const [similarProperties, setSimilarProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,9 +23,8 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
     const fetchProperty = async () => {
       try {
         const q = query(
-          collection(dbClient, 'properties'), 
-          where('slug', '==', slug),
-          where('category', '==', category)
+          collection(dbClient, collectionName), 
+          where('slug', '==', slug)
         );
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
@@ -33,8 +33,7 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
 
           // Fetch similar properties
           const simQ = query(
-            collection(dbClient, 'properties'),
-            where('category', '==', category),
+            collection(dbClient, collectionName),
             where('status', '==', 'Available')
           );
           const simSnap = await getDocs(simQ);
@@ -51,7 +50,7 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
       }
     };
     fetchProperty();
-  }, [slug, category]);
+  }, [slug, collectionName]);
 
   if (loading) {
     return <div className="min-h-screen pt-24 pb-12 flex items-center justify-center"><div className="animate-pulse flex flex-col items-center"><div className="h-12 w-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><p className="mt-4 text-muted-foreground">Loading details...</p></div></div>;
@@ -61,7 +60,7 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
     return <div className="min-h-screen pt-24 pb-12 flex items-center justify-center text-xl text-muted-foreground">Property not found.</div>;
   }
 
-  const allImages = [property.image, ...(property.images || [])].filter(Boolean);
+  const allImages = [property.coverImage, property.image, ...(property.galleryImages || []), ...(property.images || [])].filter(Boolean);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 pb-28 lg:pb-12">
@@ -70,14 +69,14 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">{property.type}</span>
-              {property.status === 'Available' && <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Available</span>}
+              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">{property.type || category}</span>
+              {(property.status === 'Available' || property.status === 'Completed') && <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">{property.status}</span>}
               {property.verified && <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1"><ShieldCheck size={14} /> Verified</span>}
             </div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">{property.title}</h1>
             <div className="flex items-center text-muted-foreground gap-2">
               <MapPin size={18} />
-              <span>{property.address || property.district}</span>
+              <span>{property.address || property.area || property.district}</span>
             </div>
           </div>
           <div className="text-left md:text-right">
@@ -113,12 +112,22 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
               </div>
             </div>
 
+            {/* Video Tour */}
+            {(property.videoUrl || property.youtubeVideo) && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border">
+                <h2 className="text-xl font-bold mb-4">Virtual Tour / Video</h2>
+                <div className="w-full h-[400px] rounded-lg overflow-hidden">
+                  <iframe src={property.videoUrl || property.youtubeVideo} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"></iframe>
+                </div>
+              </div>
+            )}
+
             {/* Location Map */}
-            {property.googleMapUrl && (
+            {(property.mapUrl || property.googleMapUrl) && (
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border">
                 <h2 className="text-xl font-bold mb-4">Location Map</h2>
                 <div className="w-full h-[400px] rounded-lg overflow-hidden">
-                  <iframe src={property.googleMapUrl} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                  <iframe src={property.mapUrl || property.googleMapUrl} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                 </div>
               </div>
             )}

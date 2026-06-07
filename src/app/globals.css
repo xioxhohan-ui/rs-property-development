@@ -3,19 +3,19 @@
 :root {
   --primary-color: #FFFFFF;
   --secondary-color: #FAFAFA; /* Soft White */
-  --accent-color: #1E466B; /* Bold Blue */
-  --light-accent: #67BAF4; /* Light Blue */
-  --text-color: #0D0D0D; /* Jet Black */
+  --accent-color: #D4AF37; /* Premium Soft Gold */
+  --light-accent: #E5C158; /* Lighter Gold */
+  --text-color: #1A1A1A; /* Soft Luxury Black */
   --text-muted: #6c757d;
   --success-color: #28A745;
-  --border-color: #E5E7EB;
+  --border-color: #EAEAEA;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
 }
 
 * {

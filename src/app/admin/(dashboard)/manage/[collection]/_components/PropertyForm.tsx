@@ -10,9 +10,10 @@ import { Loader2, UploadCloud, X, Image as ImageIcon, Link as LinkIcon } from 'l
 interface PropertyFormProps {
   mode: 'create' | 'edit';
   initialData?: any;
+  collectionName?: string;
 }
 
-export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
+export default function PropertyForm({ mode, initialData, collectionName = 'properties' }: PropertyFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -28,13 +29,13 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
   const [district, setDistrict] = useState(initialData?.district || 'Dhaka');
   const [area, setArea] = useState(initialData?.area || '');
   const [address, setAddress] = useState(initialData?.address || '');
-  const [googleMapUrl, setGoogleMapUrl] = useState(initialData?.googleMapUrl || '');
+  const [googleMapUrl, setGoogleMapUrl] = useState(initialData?.googleMapUrl || initialData?.mapUrl || '');
   
   // Details & Contact
   const [price, setPrice] = useState(initialData?.price || '');
   const [size, setSize] = useState(initialData?.size || '');
   const [description, setDescription] = useState(initialData?.description || '');
-  const [youtubeVideo, setYoutubeVideo] = useState(initialData?.youtubeVideo || '');
+  const [youtubeVideo, setYoutubeVideo] = useState(initialData?.youtubeVideo || initialData?.videoUrl || '');
   const [whatsappNumber, setWhatsappNumber] = useState(initialData?.whatsappNumber || '');
   const [contactNumber, setContactNumber] = useState(initialData?.contactNumber || '');
   
@@ -43,14 +44,14 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
   const [verified, setVerified] = useState(initialData?.verified || false);
 
   // SEO Fields
-  const [seoTitle, setSeoTitle] = useState(initialData?.seoTitle || '');
-  const [seoDescription, setSeoDescription] = useState(initialData?.seoDescription || '');
-  const [seoKeywords, setSeoKeywords] = useState(initialData?.seoKeywords || '');
+  const [seoTitle, setSeoTitle] = useState(initialData?.seoTitle || initialData?.metaTitle || '');
+  const [seoDescription, setSeoDescription] = useState(initialData?.seoDescription || initialData?.metaDescription || '');
+  const [seoKeywords, setSeoKeywords] = useState(initialData?.seoKeywords || (initialData?.keywords ? initialData.keywords.join(', ') : ''));
 
   // Images
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [coverImageUrl, setCoverImageUrl] = useState(initialData?.image || '');
-  const [galleryUrls, setGalleryUrls] = useState<string[]>(initialData?.images || []);
+  const [coverImageUrl, setCoverImageUrl] = useState(initialData?.coverImage || initialData?.image || '');
+  const [galleryUrls, setGalleryUrls] = useState<string[]>(initialData?.galleryImages || initialData?.images || []);
   const [galleryUrlInput, setGalleryUrlInput] = useState('');
 
   // Auto-generate slug from title
@@ -89,7 +90,7 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
 
       // Upload Cover Image if a file was selected
       if (coverImage) {
-        const fileRef = ref(storage, `properties/${Date.now()}_${coverImage.name}`);
+        const fileRef = ref(storage, `${collectionName}/${Date.now()}_${coverImage.name}`);
         const snapshot = await uploadBytes(fileRef, coverImage);
         finalCoverUrl = await getDownloadURL(snapshot.ref);
       }
@@ -104,16 +105,20 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
         area,
         address,
         googleMapUrl,
+        mapUrl: googleMapUrl, // Alias for backward compatibility
         price,
         size,
         description,
         youtubeVideo,
+        videoUrl: youtubeVideo, // Alias for new detail template
         whatsappNumber,
         contactNumber,
         featured,
         verified,
         image: finalCoverUrl,
+        coverImage: finalCoverUrl, // Alias
         images: galleryUrls,
+        galleryImages: galleryUrls, // Alias
         seoTitle,
         seoDescription,
         seoKeywords,
@@ -121,16 +126,16 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
       };
 
       if (mode === 'create') {
-        await addDoc(collection(dbClient, 'properties'), {
+        await addDoc(collection(dbClient, collectionName), {
           ...propertyData,
           createdAt: serverTimestamp(),
         });
       } else if (initialData?.id) {
-        const docRef = doc(dbClient, 'properties', initialData.id);
+        const docRef = doc(dbClient, collectionName, initialData.id);
         await updateDoc(docRef, propertyData);
       }
 
-      router.push('/admin/properties');
+      router.push(`/admin/manage/${collectionName}`);
       router.refresh();
     } catch (err: any) {
       console.error('Error saving property:', err);

@@ -12,6 +12,7 @@ export default function PropertyPage() {
       title="Properties for Sale" 
       subtitle="Discover premium residential, commercial, and luxury properties tailored to your needs."
       category="Property"
+      collectionName="properties"
     />
   );
 }

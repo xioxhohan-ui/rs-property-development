@@ -9,9 +9,10 @@ interface ListingPageTemplateProps {
   title: string;
   subtitle: string;
   category: string;
+  collectionName?: string;
 }
 
-export default function ListingPageTemplate({ title, subtitle, category }: ListingPageTemplateProps) {
+export default function ListingPageTemplate({ title, subtitle, category, collectionName = 'properties' }: ListingPageTemplateProps) {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   const FilterContent = () => (
@@ -55,7 +56,7 @@ export default function ListingPageTemplate({ title, subtitle, category }: Listi
           </div>
           
           <div className="lg:col-span-3">
-            <ListingGrid filterCategory={category} />
+            <ListingGrid filterCategory={category} collectionName={collectionName} />
           </div>
         </div>
       </div>

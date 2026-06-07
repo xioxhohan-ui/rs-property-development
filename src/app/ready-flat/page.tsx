@@ -12,6 +12,7 @@ export default function ReadyFlatPage() {
       title="Ready Flats & Apartments" 
       subtitle="Find your perfect home. Explore our curated list of ready-to-move flats and luxury apartments."
       category="Ready Flat"
+      collectionName="ready_flats"
     />
   );
 }
