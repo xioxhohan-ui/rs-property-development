@@ -6,9 +6,7 @@ module.exports = {
   content: [
     './src/**/*.{ts,tsx}',
   ],
-  corePlugins: {
-    preflight: false,
-  },
+
   theme: {
     container: {
       center: true,
