@@ -98,21 +98,25 @@ export default function ListingGrid({
 
   if (filtered.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-16 text-center border-2 border-dashed rounded-2xl bg-white dark:bg-gray-800/50">
-        <svg className="h-14 w-14 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <h3 className="text-lg font-semibold mb-1 text-gray-700 dark:text-gray-300">No results found</h3>
-        <p className="text-gray-400 text-sm">Try adjusting your search or clearing the filters.</p>
+      <div className="flex flex-col items-center justify-center p-16 text-center rounded-2xl"
+        style={{ background: '#fff', border: '2px dashed #67BAF4' }}>
+        <div className="h-16 w-16 rounded-full flex items-center justify-center mb-4"
+          style={{ background: 'rgba(103,186,244,0.12)' }}>
+          <svg className="h-8 w-8" style={{ color: '#1E466B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-bold mb-1" style={{ color: '#1E466B' }}>No results found</h3>
+        <p className="text-sm" style={{ color: '#5a6a7a' }}>Try adjusting your search or clearing the filters.</p>
       </div>
     );
   }
 
   return (
     <div>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        Showing <span className="font-semibold text-gray-700 dark:text-gray-300">{filtered.length}</span> listing{filtered.length !== 1 ? 's' : ''}
-        {search && <span> for "<span className="text-primary">{search}</span>"</span>}
+      <p className="text-sm mb-5 font-medium" style={{ color: '#5a6a7a' }}>
+        Showing <span className="font-bold" style={{ color: '#1E466B' }}>{filtered.length}</span> listing{filtered.length !== 1 ? 's' : ''}
+        {search && <span> for "<span style={{ color: '#1E466B' }}>{search}</span>"</span>}
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((prop) => (

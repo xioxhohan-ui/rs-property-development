@@ -7,7 +7,7 @@ module.exports = {
     './src/**/*.{ts,tsx}',
   ],
   corePlugins: {
-    preflight: false, // Prevent breaking the existing frontend
+    preflight: false,
   },
   theme: {
     container: {
@@ -19,47 +19,61 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border, 214.3 31.8% 91.4%))",
-        input: "hsl(var(--input, 214.3 31.8% 91.4%))",
-        ring: "hsl(var(--ring, 222.2 84% 4.9%))",
-        background: "var(--secondary-color)",
-        foreground: "var(--text-color)",
+        /* ── Brand ── */
+        'bold-blue':  '#1E466B',
+        'light-blue': '#67BAF4',
+        'soft-white': '#FAFAFA',
+        'jet-black':  '#0D0D0D',
+
+        /* ── Tailwind semantic tokens ── */
+        border:     "var(--border-color)",
+        input:      "var(--border-color)",
+        ring:       "var(--light-blue)",
+        background: "var(--soft-white)",
+        foreground: "var(--jet-black)",
+
         primary: {
-          DEFAULT: "var(--accent-color)",
-          foreground: "var(--primary-color)",
+          DEFAULT:    "var(--bold-blue)",    /* #1E466B */
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "var(--secondary-color)",
-          foreground: "var(--text-color)",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive, 0 84.2% 60.2%))",
-          foreground: "hsl(var(--destructive-foreground, 210 40% 98%))",
-        },
-        muted: {
-          DEFAULT: "var(--border-color)",
-          foreground: "var(--text-muted)",
+          DEFAULT:    "var(--soft-white)",
+          foreground: "var(--jet-black)",
         },
         accent: {
-          DEFAULT: "var(--light-accent)",
-          foreground: "var(--text-color)",
+          DEFAULT:    "var(--light-blue)",   /* #67BAF4 */
+          foreground: "var(--jet-black)",
         },
-        popover: {
-          DEFAULT: "var(--primary-color)",
-          foreground: "var(--text-color)",
+        muted: {
+          DEFAULT:    "#f1f5f9",
+          foreground: "var(--text-muted)",
         },
         card: {
-          DEFAULT: "var(--primary-color)",
-          foreground: "var(--text-color)",
+          DEFAULT:    "#FFFFFF",
+          foreground: "var(--jet-black)",
+        },
+        popover: {
+          DEFAULT:    "#FFFFFF",
+          foreground: "var(--jet-black)",
+        },
+        destructive: {
+          DEFAULT:    "hsl(0 84.2% 60.2%)",
+          foreground: "#FFFFFF",
         },
       },
       borderRadius: {
-        lg: "0.75rem",
-        md: "0.5rem",
-        sm: "0.25rem",
+        lg: "0.875rem",
+        md: "0.625rem",
+        sm: "0.375rem",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ["Inter", ...fontFamily.sans],
+        heading: ["Poppins", ...fontFamily.sans],
+      },
+      boxShadow: {
+        'brand-sm': '0 1px 3px 0 rgba(30, 70, 107, 0.08)',
+        'brand-md': '0 4px 12px -2px rgba(30, 70, 107, 0.14)',
+        'brand-lg': '0 10px 30px -4px rgba(30, 70, 107, 0.18)',
       },
       keyframes: {
         "accordion-down": {
@@ -79,4 +93,3 @@ module.exports = {
   },
   plugins: [require("tailwindcss-animate")],
 }
-
