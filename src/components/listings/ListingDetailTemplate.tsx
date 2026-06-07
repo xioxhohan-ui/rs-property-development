@@ -150,7 +150,17 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
                   <MessageCircle size={18} /> <span className="hidden sm:inline">WhatsApp</span>
                 </a>
                 <div className="hidden lg:flex pt-4 mt-4 border-t justify-center gap-4 text-muted-foreground">
-                  <button className="flex flex-col items-center hover:text-primary transition-colors"><Share2 size={20} /><span className="text-xs mt-1">Share</span></button>
+                  <button 
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        navigator.clipboard.writeText(window.location.href);
+                        alert('Link copied to clipboard!');
+                      }
+                    }}
+                    className="flex flex-col items-center hover:text-primary transition-colors"
+                  >
+                    <Share2 size={20} /><span className="text-xs mt-1">Share</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -159,11 +169,15 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border">
               <h3 className="font-bold text-lg mb-4">Quick Details</h3>
               <ul className="space-y-3 text-sm">
-                <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Property ID</span><span className="font-medium">{property.id?.slice(0, 8).toUpperCase() || 'N/A'}</span></li>
-                <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Category</span><span className="font-medium">{property.category}</span></li>
-                <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Type</span><span className="font-medium">{property.type}</span></li>
-                <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground">Size</span><span className="font-medium">{property.size || 'N/A'}</span></li>
-                {property.district && <li className="flex justify-between pb-2"><span className="text-muted-foreground">District</span><span className="font-medium">{property.district}</span></li>}
+                <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Property ID</span><span className="font-medium text-right break-words">{property.id?.slice(0, 8).toUpperCase() || 'N/A'}</span></li>
+                {property.category && <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Category</span><span className="font-medium text-right break-words">{property.category}</span></li>}
+                {property.type && <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Type</span><span className="font-medium text-right break-words">{property.type}</span></li>}
+                {property.size && <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Size</span><span className="font-medium text-right break-words">{property.size}</span></li>}
+                {property.bedrooms && <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Bedrooms</span><span className="font-medium text-right break-words">{property.bedrooms}</span></li>}
+                {property.bathrooms && <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Bathrooms</span><span className="font-medium text-right break-words">{property.bathrooms}</span></li>}
+                {property.garage && <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Garage</span><span className="font-medium text-right break-words">{property.garage}</span></li>}
+                {property.district && <li className="flex justify-between border-b pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">District</span><span className="font-medium text-right break-words">{property.district}</span></li>}
+                {property.area && <li className="flex justify-between pb-2"><span className="text-muted-foreground whitespace-nowrap mr-4">Area</span><span className="font-medium text-right break-words">{property.area}</span></li>}
               </ul>
             </div>
 

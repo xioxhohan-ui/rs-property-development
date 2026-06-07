@@ -34,6 +34,9 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
   // Details & Contact
   const [price, setPrice] = useState(initialData?.price || '');
   const [size, setSize] = useState(initialData?.size || '');
+  const [bedrooms, setBedrooms] = useState(initialData?.bedrooms || '');
+  const [bathrooms, setBathrooms] = useState(initialData?.bathrooms || '');
+  const [garage, setGarage] = useState(initialData?.garage || '');
   const [description, setDescription] = useState(initialData?.description || '');
   const [youtubeVideo, setYoutubeVideo] = useState(initialData?.youtubeVideo || initialData?.videoUrl || '');
   const [whatsappNumber, setWhatsappNumber] = useState(initialData?.whatsappNumber || '');
@@ -108,6 +111,9 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
         mapUrl: googleMapUrl, // Alias for backward compatibility
         price,
         size,
+        bedrooms: bedrooms ? Number(bedrooms) : null,
+        bathrooms: bathrooms ? Number(bathrooms) : null,
+        garage: garage ? Number(garage) : null,
         description,
         youtubeVideo,
         videoUrl: youtubeVideo, // Alias for new detail template
@@ -230,9 +236,26 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Land Size *</label>
-            <input required value={size} onChange={(e) => setSize(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="e.g., 5 Katha" />
+            <label className="text-sm font-medium">Land/Property Size *</label>
+            <input required value={size} onChange={(e) => setSize(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="e.g., 5 Katha or 2500 sqft" />
           </div>
+
+          {(type === 'Residential' || type === 'Flat' || type === 'Duplex' || category === 'Ready Flat') && (
+            <>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Bedrooms</label>
+                <input type="number" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="e.g., 3" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Bathrooms</label>
+                <input type="number" value={bathrooms} onChange={(e) => setBathrooms(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="e.g., 3" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Garage / Parking</label>
+                <input type="number" value={garage} onChange={(e) => setGarage(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="e.g., 1" />
+              </div>
+            </>
+          )}
         </div>
 
         <div className="space-y-2 mb-6">
