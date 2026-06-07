@@ -31,28 +31,28 @@ module.exports = {
         foreground: "var(--jet-black)",
 
         primary: {
-          DEFAULT:    "#1E466B",
+          DEFAULT:    "#1f3d2d",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT:    "#FAFAFA",
-          foreground: "#0D0D0D",
+          DEFAULT:    "#f4f9f6",
+          foreground: "#0a120e",
         },
         accent: {
-          DEFAULT:    "#67BAF4",
-          foreground: "#0D0D0D",
+          DEFAULT:    "#8ec6a4",
+          foreground: "#0a120e",
         },
         muted: {
-          DEFAULT:    "#f1f5f9",
-          foreground: "#5a6a7a",
+          DEFAULT:    "#e2ece6",
+          foreground: "#4b6055",
         },
         card: {
           DEFAULT:    "#FFFFFF",
-          foreground: "#0D0D0D",
+          foreground: "#0a120e",
         },
         popover: {
           DEFAULT:    "#FFFFFF",
-          foreground: "#0D0D0D",
+          foreground: "#0a120e",
         },
         destructive: {
           DEFAULT:    "hsl(0 84.2% 60.2%)",

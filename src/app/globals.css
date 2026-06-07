@@ -6,21 +6,21 @@
 
 :root {
   /* ── New Brand Palette ── */
-  --bold-blue:    #1E466B;   /* Deep navy blue — primary brand */
-  --light-blue:   #67BAF4;   /* Sky blue — accent / highlights */
-  --soft-white:   #FAFAFA;   /* Page background */
-  --jet-black:    #0D0D0D;   /* Headings / dark text */
+  --bold-blue:    #1f3d2d;   /* Deep forest green — primary brand */
+  --light-blue:   #8ec6a4;   /* Soft mint green — accent / highlights */
+  --soft-white:   #f4f9f6;   /* Page background */
+  --jet-black:    #0a120e;   /* Headings / dark text */
 
   /* ── Semantic Aliases ── */
   --primary-color:   #FFFFFF;
-  --secondary-color: #FAFAFA;
-  --accent-color:    #1E466B;   /* Bold Blue as primary action */
-  --accent-hover:    #163552;   /* Darker Bold Blue */
-  --light-accent:    #67BAF4;   /* Light Blue for highlights */
-  --text-color:      #0D0D0D;
-  --text-muted:      #5a6a7a;
+  --secondary-color: #f4f9f6;
+  --accent-color:    #1f3d2d;   /* Forest Green as primary action */
+  --accent-hover:    #162d21;   /* Darker Forest Green */
+  --light-accent:    #8ec6a4;   /* Mint Green for highlights */
+  --text-color:      #0a120e;
+  --text-muted:      #4b6055;
   --success-color:   #22c55e;
-  --border-color:    #e2e8f0;
+  --border-color:    #d1e0d8;
 
   /* ── Shadows ── */
   --shadow-sm: 0 1px 3px 0 rgba(30, 70, 107, 0.08);
