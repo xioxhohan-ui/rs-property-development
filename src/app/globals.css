@@ -80,41 +80,6 @@ button {
   padding: 0 1.5rem;
 }
 
-/* ── Text Utilities ── */
-.text-center  { text-align: center; }
-.text-accent  { color: var(--accent-color); }
-.text-success { color: var(--success-color); }
-.text-muted   { color: var(--text-muted); }
-
-/* ── Background Utilities ── */
-.bg-primary   { background-color: var(--primary-color); }
-.bg-secondary { background-color: var(--secondary-color); }
-.bg-accent    { background-color: var(--accent-color); }
-
-/* ── Layout ── */
-.flex         { display: flex; }
-.flex-col     { display: flex; flex-direction: column; }
-.items-center { align-items: center; }
-.justify-center   { justify-content: center; }
-.justify-between  { justify-content: space-between; }
-.gap-2 { gap: 0.5rem; }
-.gap-4 { gap: 1rem; }
-.gap-6 { gap: 1.5rem; }
-.gap-8 { gap: 2rem; }
-
-.grid          { display: grid; }
-.grid-cols-1   { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-@media (min-width: 768px) {
-  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
-.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
-.py-20 { padding-top: 5rem; padding-bottom: 5rem; }
-.mb-4  { margin-bottom: 1rem; }
-.mb-8  { margin-bottom: 2rem; }
-
 /* ── Custom Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--soft-white); }
