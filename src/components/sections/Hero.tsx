@@ -46,7 +46,7 @@ export const Hero = () => {
                 <Button variant="primary" size="lg">Browse Plots</Button>
               </Link>
               <Link href="/sell">
-                <Button variant="outline" size="lg" style={{ borderColor: 'var(--bold-blue)', color: 'var(--bold-blue)' }}>Sell Property</Button>
+                <Button variant="secondary" size="lg">Sell Property</Button>
               </Link>
             </motion.div>
           </motion.div>
@@ -64,8 +64,8 @@ export const Hero = () => {
               className={styles.floatingImageWrapper}
             >
               <img 
-                src="/images/hero-island.jpg" 
-                alt="Floating Luxury Property" 
+                src="/home.png" 
+                alt="Luxury Property Bangladesh" 
                 className={styles.heroImage}
                 onError={(e) => {
                   e.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
