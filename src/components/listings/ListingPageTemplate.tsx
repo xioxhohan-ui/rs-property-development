@@ -45,7 +45,7 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
 
       {/* ── Search Bar ── */}
       <div className="container" style={{ marginTop: '-32px', position: 'relative', zIndex: 20 }}>
-        <div className="listing-pill-bar" style={{
+        <div style={{
           background: '#fff',
           borderRadius: '999px',
           boxShadow: '0 4px 32px rgba(30,70,107,0.14)',
@@ -58,34 +58,32 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
           overflow: 'hidden',
         }}>
           {/* Search Icon + Input */}
-          <div className="listing-pill-input-wrap" style={{ display: 'flex', alignItems: 'center', flex: '1 1 auto' }}>
-            <svg style={{ flexShrink: 0, marginRight: '10px' }} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9aafc4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search by location, district, or area..."
-              style={{
-                width: '100%',
-                minWidth: '100px',
-                border: 'none',
-                outline: 'none',
-                background: 'transparent',
-                fontSize: '14px',
-                color: '#0D0D0D',
-                fontFamily: 'Inter,sans-serif',
-                padding: '8px 0',
-              }}
-            />
-          </div>
+          <svg style={{ flexShrink: 0, marginRight: '10px' }} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9aafc4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by location, district, or area..."
+            style={{
+              flex: '1 1 auto',
+              minWidth: '100px',
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              fontSize: '14px',
+              color: '#0D0D0D',
+              fontFamily: 'Inter,sans-serif',
+              padding: '8px 0',
+            }}
+          />
 
           {/* Divider */}
-          <div className="pill-divider" style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
+          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
 
           {/* Property Type */}
-          <div style={{ position: 'relative', flexShrink: 0 }} className="listing-pill-select-wrap">
+          <div style={{ position: 'relative', flexShrink: 0 }}>
             <select
               value={selectedType}
               onChange={e => setSelectedType(e.target.value)}
@@ -112,10 +110,10 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
           </div>
 
           {/* Divider */}
-          <div className="pill-divider" style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
+          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
 
           {/* District */}
-          <div style={{ position: 'relative', flexShrink: 0 }} className="listing-pill-select-wrap">
+          <div style={{ position: 'relative', flexShrink: 0 }}>
             <select
               value={selectedDistrict}
               onChange={e => setSelectedDistrict(e.target.value)}
@@ -142,10 +140,10 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
           </div>
 
           {/* Divider */}
-          <div className="pill-divider" style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
+          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
 
           {/* Price Range */}
-          <div style={{ position: 'relative', flexShrink: 0 }} className="listing-pill-select-wrap">
+          <div style={{ position: 'relative', flexShrink: 0 }}>
             <select
               value={selectedPrice}
               onChange={e => setSelectedPrice(e.target.value)}
@@ -173,7 +171,6 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
 
           {/* Search Button */}
           <button
-            className="search-btn"
             style={{
               flexShrink: 0,
               marginLeft: '6px',

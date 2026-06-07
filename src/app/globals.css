@@ -8,12 +8,13 @@
   --jet-black:    #0D0D0D;   /* Headings / dark text */
 
   /* ── Semantic Aliases ── */
-  --primary-color:   var(--bold-blue);
-  --secondary-color: var(--soft-white);
-  --accent-color:    var(--light-blue);
-  --accent-hover:    #4a9edc;
-  --text-color:      var(--jet-black);
-  --text-muted:      #64748b;
+  --primary-color:   #FFFFFF;
+  --secondary-color: #FAFAFA;
+  --accent-color:    #1E466B;   /* Bold Blue as primary action */
+  --accent-hover:    #163552;   /* Darker Bold Blue */
+  --light-accent:    #67BAF4;   /* Light Blue for highlights */
+  --text-color:      #0D0D0D;
+  --text-muted:      #5a6a7a;
   --success-color:   #22c55e;
   --border-color:    #e2e8f0;
 
