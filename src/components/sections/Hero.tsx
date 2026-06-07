@@ -65,11 +65,8 @@ export const Hero = () => {
             >
               <img 
                 src="/home.png" 
-                alt="Luxury Property Bangladesh" 
+                alt="Floating Luxury Property" 
                 className={styles.heroImage}
-                onError={(e) => {
-                  e.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
-                }}
               />
             </motion.div>
           </motion.div>
