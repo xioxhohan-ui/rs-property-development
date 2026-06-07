@@ -1,0 +1,134 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background-color: var(--primary-color);
+  transition: all 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.scrolled {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 5rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logoIcon {
+  color: var(--accent-color);
+  width: 2rem;
+  height: 2rem;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoPrimary {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.logoSecondary {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .desktopNav {
+    display: flex;
+  }
+}
+
+.navLink {
+  position: relative;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: var(--accent-color);
+}
+
+.navLink.active {
+  color: var(--accent-color);
+}
+
+.indicator {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  border-radius: 2px;
+}
+
+.mobileToggle {
+  display: block;
+  background: none;
+  color: var(--text-color);
+}
+
+@media (min-width: 768px) {
+  .mobileToggle {
+    display: none;
+  }
+}
+
+.mobileNav {
+  overflow: hidden;
+  background-color: var(--primary-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobileNavContainer {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+  padding-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 0.5rem 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobileNavLink:last-of-type {
+  border-bottom: none;
+}

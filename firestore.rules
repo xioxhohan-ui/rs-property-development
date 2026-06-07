@@ -1,0 +1,149 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Role Verification Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserRole() {
+      return isAuthenticated() ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role : null;
+    }
+
+    function isSuperAdmin() {
+      return getUserRole() == 'super_admin';
+    }
+
+    function isAdmin() {
+      return getUserRole() == 'admin' || isSuperAdmin();
+    }
+
+    function isEditor() {
+      return getUserRole() == 'editor' || isAdmin();
+    }
+
+    function isAgent() {
+      return getUserRole() == 'agent';
+    }
+
+    // ==========================================
+    // USERS COLLECTION
+    // ==========================================
+    match /users/{userId} {
+      // Users can read their own data, Super Admin can read/write all
+      allow read: if request.auth.uid == userId || isAdmin();
+      
+      // Users can update specific non-admin fields on their own profile
+      allow update: if isSuperAdmin() || (request.auth.uid == userId && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status', 'emailVerified', 'phoneVerified']));
+      allow write: if isSuperAdmin();
+    }
+
+    // ==========================================
+    // USER LOCATIONS & ACTIVITY COLLECTIONS
+    // ==========================================
+    match /user_locations/{locationId} {
+      // Admins can read all locations, users can read/write their own
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow write: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+    
+    match /user_activity/{activityId} {
+      // Admins can read all activity, users can write their own
+      allow read: if isAdmin();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSuperAdmin();
+    }
+
+    // ==========================================
+    // PROPERTIES COLLECTION
+    // ==========================================
+    match /properties/{propertyId} {
+      // Public can read approved and available properties
+      allow read: if (resource.data.status != 'archived' && resource.data.approvalStatus == 'approved') || isAdmin() || (isAuthenticated() && resource.data.createdBy == request.auth.uid);
+      
+      // Admins can create/update. Agents can create/update their own properties
+      allow create: if isAdmin() || isAgent();
+      allow update: if isAdmin() || (isAgent() && resource.data.createdBy == request.auth.uid);
+      
+      // Only Super Admin can delete
+      allow delete: if isSuperAdmin();
+    }
+
+    // ==========================================
+    // BLOGS COLLECTION
+    // ==========================================
+    match /posts/{blogId} {
+      // Public can read published blogs
+      allow read: if resource.data.status == 'Published' || isEditor();
+      
+      // Editors and Admins can create and update
+      allow create, update: if isEditor();
+      
+      // Only Super Admin can delete
+      allow delete: if isSuperAdmin();
+    }
+
+    // ==========================================
+    // INQUIRIES & LEADS COLLECTIONS
+    // ==========================================
+    match /inquiries/{inquiryId} {
+      // Public can create, only Admins can read/update/delete
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    match /property_submissions/{submissionId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ==========================================
+    // DISTRICTS & DIVISIONS COLLECTIONS
+    // ==========================================
+    match /districts/{districtId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ==========================================
+    // SETTINGS COLLECTION
+    // ==========================================
+    match /settings/{document=**} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+    
+    // ==========================================
+    // FAVORITES & REVIEWS COLLECTIONS
+    // ==========================================
+    match /favorites/{favoriteId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+    
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // ==========================================
+    // ANALYTICS & VIEWS COLLECTIONS
+    // ==========================================
+    match /property_views/{viewId} {
+      allow create: if true; // Public can trigger a view count
+      allow read, update, delete: if isAdmin();
+    }
+    
+    match /notifications/{notificationId} {
+      allow read: if isAdmin();
+      allow write: if false; // Only written by Cloud Functions
+    }
+  }
+}

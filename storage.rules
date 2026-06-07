@@ -1,0 +1,52 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Function to check file type and size
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isBelowMaxSize() {
+      return request.resource.size < 5 * 1024 * 1024; // 5MB max
+    }
+
+    function isValidUpload() {
+      return isImage() && isBelowMaxSize();
+    }
+
+    // Properties Images
+    match /properties/{propertyId}/{imageId} {
+      // Anyone can view property images
+      allow read: if true;
+      // Only authenticated users can upload (Role validation is done client-side/functions)
+      allow write: if isAuthenticated() && isValidUpload();
+      allow delete: if isAuthenticated();
+    }
+
+    // Blog Images
+    match /blogs/{imageId} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidUpload();
+      allow delete: if isAuthenticated();
+    }
+    
+    // District Images
+    match /districts/{imageId} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidUpload();
+      allow delete: if isAuthenticated();
+    }
+    
+    // Default catch-all (deny)
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

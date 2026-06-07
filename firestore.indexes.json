@@ -1,0 +1,94 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "plots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "district", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "plots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "district", "order": "ASCENDING" },
+        { "fieldPath": "propertyType", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "plots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "price", "order": "ASCENDING" },
+        { "fieldPath": "district", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "plots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "price", "order": "DESCENDING" },
+        { "fieldPath": "district", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "plots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "featured", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "plots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "approvalStatus", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "posts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "user_activity",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "user_locations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "lastUpdated", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "inquiries",
+      "fieldPath": "status",
+      "indexes": [
+        { "order": "ASCENDING", "queryScope": "COLLECTION" },
+        { "order": "DESCENDING", "queryScope": "COLLECTION" }
+      ]
+    },
+    {
+      "collectionGroup": "leads",
+      "fieldPath": "status",
+      "indexes": [
+        { "order": "ASCENDING", "queryScope": "COLLECTION" },
+        { "order": "DESCENDING", "queryScope": "COLLECTION" }
+      ]
+    }
+  ]
+}
