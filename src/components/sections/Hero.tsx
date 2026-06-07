@@ -9,6 +9,25 @@ import styles from './Hero.module.css';
 export const Hero = () => {
   return (
     <section className={styles.hero}>
+      {/* Decorative 2D Background Elements (Zero Lag) */}
+      <div className={styles.bgDecorations}>
+        <motion.div 
+          className={`${styles.decorObject} ${styles.decor1}`}
+          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className={`${styles.decorObject} ${styles.decor2}`}
+          animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 10, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div 
+          className={`${styles.decorObject} ${styles.decor3}`}
+          animate={{ y: [0, -10, 0], scale: [1, 1.05, 1] }}
+          transition={{ repeat: Infinity, duration: 7, ease: "easeInOut", delay: 2 }}
+        />
+      </div>
+
       <div className={`container ${styles.container}`}>
         <div className={styles.splitLayout}>
           {/* Text Content */}
