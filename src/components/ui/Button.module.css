@@ -28,13 +28,13 @@
 }
 
 .btn-primary {
-  background-color: var(--accent-color);
-  color: #FFFFFF;
+  background-color: var(--light-accent);
+  color: #0D0D0D; /* Jet Black for better contrast on light blue */
   box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-  background-color: #b38f20;
+  background-color: #4da4df; /* Slightly darker light blue */
   box-shadow: var(--shadow-lg);
 }
 

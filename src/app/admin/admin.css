@@ -13,11 +13,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 5%;
 
-    --primary: 209 56% 27%; /* 1E466B - Bold Blue */
-    --primary-foreground: 0 0% 98%;
+    --primary: 205 87% 68%; /* 67BAF4 - Light Blue */
+    --primary-foreground: 0 0% 5%; /* Jet Black text */
 
-    --secondary: 205 87% 68%; /* 67BAF4 - Light Blue */
-    --secondary-foreground: 0 0% 5%;
+    --secondary: 209 56% 27%; /* 1E466B - Bold Blue */
+    --secondary-foreground: 0 0% 98%; /* Soft White text */
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
