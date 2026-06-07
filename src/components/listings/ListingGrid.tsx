@@ -11,7 +11,18 @@ interface ListingGridProps {
   search?: string;
   filterType?: string;
   filterDistrict?: string;
+  priceRange?: string;
   sortBy?: string;
+}
+
+function parsePriceRange(range: string): [number, number] {
+  if (range === 'Under 10 Lac') return [0, 1000000];
+  if (range === '10–50 Lac') return [1000000, 5000000];
+  if (range === '50 Lac–1 Crore') return [5000000, 10000000];
+  if (range === '1–2 Crore') return [10000000, 20000000];
+  if (range === '2–5 Crore') return [20000000, 50000000];
+  if (range === '5 Crore+') return [50000000, Infinity];
+  return [0, Infinity];
 }
 
 export default function ListingGrid({
@@ -20,6 +31,7 @@ export default function ListingGrid({
   search = '',
   filterType = '',
   filterDistrict = '',
+  priceRange = '',
   sortBy = 'newest',
 }: ListingGridProps) {
   const [properties, setProperties] = useState<any[]>([]);
@@ -75,6 +87,15 @@ export default function ListingGrid({
         (p.area || '').toLowerCase().includes(filterDistrict.toLowerCase()) ||
         (p.address || '').toLowerCase().includes(filterDistrict.toLowerCase())
       );
+    }
+
+    // Price range filter
+    if (priceRange) {
+      const [min, max] = parsePriceRange(priceRange);
+      list = list.filter(p => {
+        const price = Number(String(p.price || '0').replace(/[^0-9.]/g, ''));
+        return price >= min && price <= max;
+      });
     }
 
     // Sort

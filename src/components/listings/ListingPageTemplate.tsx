@@ -10,231 +10,290 @@ interface ListingPageTemplateProps {
   collectionName?: string;
 }
 
-const CATEGORIES = [
-  'All Categories', 'Residential', 'Commercial', 'Agricultural',
-  'Industrial', 'Plot', 'Flat', 'Duplex', 'Studio', 'Shop',
-];
+const PROPERTY_TYPES = ['Property Type', 'Residential', 'Commercial', 'Agricultural', 'Industrial', 'Plot', 'Flat', 'Duplex', 'Studio', 'Shop'];
+const DISTRICTS = ['District', 'Dhaka', 'Gazipur', 'Narayanganj', 'Purbachal', 'Uttara', 'Mirpur', 'Gulshan', 'Banani', 'Dhanmondi', 'Bashundhara', 'Sylhet', 'Chattogram', 'Khulna', 'Rajshahi', 'Barishal', 'Mymensingh'];
+const PRICE_RANGES = ['Price Range', 'Under 10 Lac', '10–50 Lac', '50 Lac–1 Crore', '1–2 Crore', '2–5 Crore', '5 Crore+'];
+const SORTS = [{ value: 'newest', label: 'Newest' }, { value: 'oldest', label: 'Oldest' }, { value: 'featured', label: 'Featured' }, { value: 'verified', label: 'Verified' }];
 
-const LOCATIONS = [
-  'All Locations', 'Dhaka', 'Gazipur', 'Narayanganj', 'Purbachal',
-  'Uttara', 'Mirpur', 'Gulshan', 'Banani', 'Dhanmondi', 'Bashundhara',
-  'Sylhet', 'Chattogram', 'Khulna', 'Rajshahi', 'Barishal', 'Mymensingh',
-];
-
-const SORTS = [
-  { value: 'newest', label: 'Newest First' },
-  { value: 'oldest', label: 'Oldest First' },
-  { value: 'featured', label: 'Featured First' },
-  { value: 'verified', label: 'Verified Only' },
-];
-
-export default function ListingPageTemplate({
-  title, subtitle, category, collectionName = 'properties'
-}: ListingPageTemplateProps) {
+export default function ListingPageTemplate({ title, subtitle, category, collectionName = 'properties' }: ListingPageTemplateProps) {
   const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All Categories');
-  const [selectedPlace, setSelectedPlace] = useState('All Locations');
+  const [selectedType, setSelectedType] = useState('Property Type');
+  const [selectedDistrict, setSelectedDistrict] = useState('District');
+  const [selectedPrice, setSelectedPrice] = useState('Price Range');
   const [sortBy, setSortBy] = useState('newest');
 
-  const hasFilters = search || selectedCategory !== 'All Categories' || selectedPlace !== 'All Locations';
+  const hasFilters = search.trim() || selectedType !== 'Property Type' || selectedDistrict !== 'District' || selectedPrice !== 'Price Range';
 
   const clearAll = () => {
     setSearch('');
-    setSelectedCategory('All Categories');
-    setSelectedPlace('All Locations');
+    setSelectedType('Property Type');
+    setSelectedDistrict('District');
+    setSelectedPrice('Price Range');
     setSortBy('newest');
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16" style={{ background: '#FAFAFA' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#FAFAFA', paddingTop: '68px' }}>
 
-      {/* ── Hero Banner ── */}
-      <div style={{ background: 'linear-gradient(135deg, #1E466B 0%, #2563ab 60%, #67BAF4 100%)' }} className="mb-0">
-        <div className="container py-12">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight">{title}</h1>
-          <p style={{ color: 'rgba(255,255,255,0.8)' }} className="text-base md:text-lg max-w-2xl">{subtitle}</p>
+      {/* ── Hero ── */}
+      <div style={{ background: 'linear-gradient(135deg, #1E466B 0%, #1a5fa8 55%, #67BAF4 100%)', padding: '44px 0 80px' }}>
+        <div className="container">
+          <h1 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 'clamp(1.75rem,4vw,2.75rem)', fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.2 }}>{title}</h1>
+          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', margin: 0, maxWidth: '540px' }}>{subtitle}</p>
         </div>
       </div>
 
-      {/* ── Search + Filter Card (overlapping hero) ── */}
-      <div className="container">
-        <div
-          className="rounded-2xl p-5 md:p-6 mb-10 -mt-6"
-          style={{
-            background: '#FFFFFF',
-            boxShadow: '0 8px 40px rgba(30,70,107,0.15)',
-            border: '1px solid #e2e8f0',
-          }}
-        >
-          {/* Search Row */}
-          <div className="relative mb-4">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2">
-              <svg className="h-5 w-5" style={{ color: '#1E466B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder={`Search ${title}... (title, area, district)`}
-              className="w-full h-13 text-sm font-medium"
+      {/* ── Search Bar ── */}
+      <div className="container" style={{ marginTop: '-32px', position: 'relative', zIndex: 20 }}>
+        <div style={{
+          background: '#fff',
+          borderRadius: '999px',
+          boxShadow: '0 4px 32px rgba(30,70,107,0.14)',
+          border: '1px solid #e8edf2',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '6px 6px 6px 20px',
+          gap: 0,
+          flexWrap: 'nowrap',
+          overflow: 'hidden',
+        }}>
+          {/* Search Icon + Input */}
+          <svg style={{ flexShrink: 0, marginRight: '10px' }} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9aafc4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by location, district, or area..."
+            style={{
+              flex: '1 1 auto',
+              minWidth: '100px',
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              fontSize: '14px',
+              color: '#0D0D0D',
+              fontFamily: 'Inter,sans-serif',
+              padding: '8px 0',
+            }}
+          />
+
+          {/* Divider */}
+          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
+
+          {/* Property Type */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <select
+              value={selectedType}
+              onChange={e => setSelectedType(e.target.value)}
               style={{
-                height: '52px',
-                paddingLeft: '48px',
-                paddingRight: search ? '44px' : '16px',
-                borderRadius: '12px',
-                border: '2px solid #e2e8f0',
-                background: '#FAFAFA',
-                color: '#0D0D0D',
-                fontSize: '15px',
-                transition: 'border-color 0.2s',
+                height: '40px',
+                paddingLeft: '14px',
+                paddingRight: '32px',
+                border: 'none',
+                background: 'transparent',
+                color: selectedType !== 'Property Type' ? '#1E466B' : '#64748b',
+                fontSize: '13px',
+                fontWeight: selectedType !== 'Property Type' ? 600 : 500,
+                fontFamily: 'Inter,sans-serif',
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                cursor: 'pointer',
+                outline: 'none',
+                whiteSpace: 'nowrap',
               }}
-              onFocus={e => { e.target.style.borderColor = '#1E466B'; }}
-              onBlur={e => { e.target.style.borderColor = '#e2e8f0'; }}
-            />
-            {search && (
-              <button
-                onClick={() => setSearch('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                style={{ background: '#1E466B' }}
-              >
-                ✕
-              </button>
-            )}
+            >
+              {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+            <svg style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
           </div>
 
-          {/* Filter Dropdowns Row */}
-          <div className="flex flex-wrap gap-3 items-center">
-            {/* Category */}
-            <div className="relative">
-              <select
-                value={selectedCategory}
-                onChange={e => setSelectedCategory(e.target.value)}
-                className="appearance-none font-medium text-sm cursor-pointer"
-                style={{
-                  height: '44px',
-                  paddingLeft: '14px',
-                  paddingRight: '36px',
-                  borderRadius: '10px',
-                  border: selectedCategory !== 'All Categories' ? '2px solid #1E466B' : '1.5px solid #e2e8f0',
-                  background: selectedCategory !== 'All Categories' ? 'rgba(30,70,107,0.06)' : '#FAFAFA',
-                  color: selectedCategory !== 'All Categories' ? '#1E466B' : '#5a6a7a',
-                  minWidth: '160px',
-                  fontWeight: 500,
-                }}
-              >
-                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: '#1E466B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
+          {/* Divider */}
+          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
 
-            {/* Location */}
-            <div className="relative">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: '#67BAF4' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <select
-                value={selectedPlace}
-                onChange={e => setSelectedPlace(e.target.value)}
-                className="appearance-none font-medium text-sm cursor-pointer"
-                style={{
-                  height: '44px',
-                  paddingLeft: '36px',
-                  paddingRight: '36px',
-                  borderRadius: '10px',
-                  border: selectedPlace !== 'All Locations' ? '2px solid #1E466B' : '1.5px solid #e2e8f0',
-                  background: selectedPlace !== 'All Locations' ? 'rgba(30,70,107,0.06)' : '#FAFAFA',
-                  color: selectedPlace !== 'All Locations' ? '#1E466B' : '#5a6a7a',
-                  minWidth: '165px',
-                  fontWeight: 500,
-                }}
-              >
-                {LOCATIONS.map(l => <option key={l} value={l}>{l}</option>)}
-              </select>
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: '#1E466B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-
-            {/* Sort */}
-            <div className="relative">
-              <select
-                value={sortBy}
-                onChange={e => setSortBy(e.target.value)}
-                className="appearance-none font-medium text-sm cursor-pointer"
-                style={{
-                  height: '44px',
-                  paddingLeft: '14px',
-                  paddingRight: '36px',
-                  borderRadius: '10px',
-                  border: '1.5px solid #e2e8f0',
-                  background: '#FAFAFA',
-                  color: '#5a6a7a',
-                  minWidth: '155px',
-                  fontWeight: 500,
-                }}
-              >
-                {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-              </select>
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: '#1E466B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-
-            {/* Clear All */}
-            {hasFilters && (
-              <button
-                onClick={clearAll}
-                className="h-11 px-4 rounded-xl text-sm font-semibold flex items-center gap-1.5 transition-all"
-                style={{ background: '#1E466B', color: '#fff' }}
-              >
-                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Clear
-              </button>
-            )}
+          {/* District */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <select
+              value={selectedDistrict}
+              onChange={e => setSelectedDistrict(e.target.value)}
+              style={{
+                height: '40px',
+                paddingLeft: '14px',
+                paddingRight: '32px',
+                border: 'none',
+                background: 'transparent',
+                color: selectedDistrict !== 'District' ? '#1E466B' : '#64748b',
+                fontSize: '13px',
+                fontWeight: selectedDistrict !== 'District' ? 600 : 500,
+                fontFamily: 'Inter,sans-serif',
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                cursor: 'pointer',
+                outline: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+            </select>
+            <svg style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
           </div>
 
-          {/* Active Tags */}
-          {hasFilters && (
-            <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #f1f5f9' }}>
-              {search && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold" style={{ background: 'rgba(30,70,107,0.1)', color: '#1E466B' }}>
-                  🔍 "{search}"
-                  <button onClick={() => setSearch('')} className="ml-0.5 hover:opacity-70">×</button>
-                </span>
-              )}
-              {selectedCategory !== 'All Categories' && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold" style={{ background: 'rgba(103,186,244,0.15)', color: '#1E466B' }}>
-                  📂 {selectedCategory}
-                  <button onClick={() => setSelectedCategory('All Categories')} className="ml-0.5 hover:opacity-70">×</button>
-                </span>
-              )}
-              {selectedPlace !== 'All Locations' && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold" style={{ background: 'rgba(103,186,244,0.15)', color: '#1E466B' }}>
-                  📍 {selectedPlace}
-                  <button onClick={() => setSelectedPlace('All Locations')} className="ml-0.5 hover:opacity-70">×</button>
-                </span>
-              )}
-            </div>
-          )}
+          {/* Divider */}
+          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
+
+          {/* Price Range */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <select
+              value={selectedPrice}
+              onChange={e => setSelectedPrice(e.target.value)}
+              style={{
+                height: '40px',
+                paddingLeft: '14px',
+                paddingRight: '32px',
+                border: 'none',
+                background: 'transparent',
+                color: selectedPrice !== 'Price Range' ? '#1E466B' : '#64748b',
+                fontSize: '13px',
+                fontWeight: selectedPrice !== 'Price Range' ? 600 : 500,
+                fontFamily: 'Inter,sans-serif',
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                cursor: 'pointer',
+                outline: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {PRICE_RANGES.map(p => <option key={p} value={p}>{p}</option>)}
+            </select>
+            <svg style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
+          </div>
+
+          {/* Search Button */}
+          <button
+            style={{
+              flexShrink: 0,
+              marginLeft: '6px',
+              height: '44px',
+              padding: '0 22px',
+              borderRadius: '999px',
+              background: '#1E466B',
+              color: '#fff',
+              fontSize: '14px',
+              fontWeight: 600,
+              fontFamily: 'Inter,sans-serif',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '7px',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Search
+          </button>
         </div>
 
-        {/* Grid */}
+        {/* ── Mobile Search Bar (stacked layout) ── */}
+        {/* Active Tags Row */}
+        {hasFilters && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px', alignItems: 'center' }}>
+            {search.trim() && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(30,70,107,0.1)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
+                🔍 "{search}" <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              </span>
+            )}
+            {selectedType !== 'Property Type' && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(103,186,244,0.15)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
+                📂 {selectedType} <button onClick={() => setSelectedType('Property Type')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              </span>
+            )}
+            {selectedDistrict !== 'District' && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(103,186,244,0.15)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
+                📍 {selectedDistrict} <button onClick={() => setSelectedDistrict('District')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              </span>
+            )}
+            {selectedPrice !== 'Price Range' && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(103,186,244,0.15)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
+                💰 {selectedPrice} <button onClick={() => setSelectedPrice('Price Range')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              </span>
+            )}
+            <button onClick={clearAll} style={{ padding: '5px 14px', borderRadius: '20px', background: '#1E466B', color: '#fff', fontSize: '12px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+              Clear all
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* ── Sort + Results Row ── */}
+      <div className="container" style={{ marginTop: '28px', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+        <p style={{ margin: 0, fontSize: '14px', color: '#5a6a7a', fontFamily: 'Inter,sans-serif' }}>
+          Showing results for <strong style={{ color: '#1E466B' }}>{title}</strong>
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '13px', color: '#9aafc4', fontFamily: 'Inter,sans-serif' }}>Sort:</span>
+          <div style={{ position: 'relative' }}>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              style={{
+                height: '36px', paddingLeft: '12px', paddingRight: '30px',
+                borderRadius: '8px', border: '1.5px solid #e2e8f0',
+                background: '#fff', color: '#1E466B',
+                fontSize: '13px', fontWeight: 600, fontFamily: 'Inter,sans-serif',
+                appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer', outline: 'none',
+              }}
+            >
+              {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+            <svg style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1E466B" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Listing Grid ── */}
+      <div className="container" style={{ paddingBottom: '60px' }}>
         <ListingGrid
           filterCategory={category}
           collectionName={collectionName}
           search={search}
-          filterType={selectedCategory === 'All Categories' ? '' : selectedCategory}
-          filterDistrict={selectedPlace === 'All Locations' ? '' : selectedPlace}
+          filterType={selectedType === 'Property Type' ? '' : selectedType}
+          filterDistrict={selectedDistrict === 'District' ? '' : selectedDistrict}
+          priceRange={selectedPrice === 'Price Range' ? '' : selectedPrice}
           sortBy={sortBy}
         />
       </div>
+
+      {/* ── Mobile Sticky Search Bar ── */}
+      <style>{`
+        @media (max-width: 640px) {
+          .listing-pill-bar {
+            border-radius: 14px !important;
+            flex-direction: column !important;
+            padding: 12px !important;
+            gap: 10px !important;
+          }
+          .listing-pill-bar .pill-divider { display: none !important; }
+          .listing-pill-bar select {
+            width: 100% !important;
+            border: 1.5px solid #e2e8f0 !important;
+            border-radius: 9px !important;
+            background: #F8FAFC !important;
+            padding-left: 12px !important;
+          }
+          .listing-pill-bar .search-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            border-radius: 10px !important;
+          }
+          .listing-pill-input-wrap {
+            width: 100% !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
