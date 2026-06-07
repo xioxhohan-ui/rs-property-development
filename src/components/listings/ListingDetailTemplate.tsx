@@ -156,7 +156,6 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
                 {property.district && <li className="flex justify-between pb-2"><span className="text-muted-foreground">District</span><span className="font-medium">{property.district}</span></li>}
               </ul>
             </div>
-            </div>
           </div>
         </div>
 
