@@ -37,8 +37,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3>Phone</h3>
-                  <p>+880 1XXX-XXXXXX (Sales)</p>
-                  <p>+880 1XXX-XXXXXX (Support)</p>
+                  <p>+880 1814963730 (Shakil Hossain Rifat)</p>
+                  <p>+880 1712053941 (Mr. Roni)</p>
                 </div>
               </div>
               
@@ -48,7 +48,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3>WhatsApp</h3>
-                  <p>+880 1XXX-XXXXXX</p>
+                  <p>+880 1814963730 (Shakil Hossain Rifat)</p>
+                  <p>+880 1712053941 (Mr. Roni)</p>
                   <Button variant="outline" size="sm" className={styles.actionBtn}>Chat on WhatsApp</Button>
                 </div>
               </div>

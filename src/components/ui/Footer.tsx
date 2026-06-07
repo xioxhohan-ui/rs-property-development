@@ -62,7 +62,7 @@ export const Footer = () => {
               </li>
               <li>
                 <Phone size={18} className={styles.contactIcon} />
-                <span>+880 1XXX-XXXXXX</span>
+                <span>+880 1814963730</span>
               </li>
               <li>
                 <Mail size={18} className={styles.contactIcon} />
