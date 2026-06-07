@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Building, FileText, Mail, Users, Map, Settings, Menu, X, LogOut, TrendingUp } from 'lucide-react';
@@ -22,7 +22,25 @@ const NAV_LINKS = [
 
 export default function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 60 && !isOpen) {
+        setHidden(true); // Scrolling down, hide navbar
+      } else {
+        setHidden(false); // Scrolling up, show navbar
+      }
+      lastScrollY = currentScrollY;
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isOpen]);
 
   const handleLogout = async () => {
     try {
@@ -43,7 +61,7 @@ export default function AdminSidebar() {
           <X className="h-6 w-6 text-muted-foreground" />
         </button>
       </div>
-      <nav className="space-y-1 px-4 flex-1">
+      <nav className="space-y-1 px-4 flex-1 overflow-y-auto">
         {NAV_LINKS.map((link) => {
           const Icon = link.icon;
           const isActive = pathname === link.href || (link.href !== '/admin' && pathname.startsWith(link.href));
@@ -65,7 +83,7 @@ export default function AdminSidebar() {
           );
         })}
       </nav>
-      <div className="p-4 border-t">
+      <div className="p-4 border-t mt-auto">
         <button 
           onClick={handleLogout}
           className="flex w-full items-center px-4 py-2 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 transition-colors"
@@ -80,7 +98,7 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Mobile Top Navbar */}
-      <div className="md:hidden flex items-center justify-between bg-card border-b p-4 sticky top-0 z-20">
+      <div className={`md:hidden flex items-center justify-between bg-card border-b p-4 sticky top-0 z-20 transition-transform duration-300 ${hidden ? '-translate-y-full' : 'translate-y-0'}`}>
         <span className="text-lg font-bold text-primary">RS Admin</span>
         <button onClick={() => setIsOpen(true)} className="p-2 rounded-md hover:bg-muted">
           <Menu className="h-6 w-6" />

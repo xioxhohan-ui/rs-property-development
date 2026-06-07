@@ -21,18 +21,32 @@ const links = [
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      
+      setScrolled(currentScrollY > 20);
+
+      if (currentScrollY > lastScrollY && currentScrollY > 80 && !isOpen) {
+        setHidden(true); // Scrolling down, hide navbar
+      } else {
+        setHidden(false); // Scrolling up, show navbar
+      }
+      
+      lastScrollY = currentScrollY;
     };
-    window.addEventListener('scroll', handleScroll);
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isOpen]);
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''} ${hidden ? styles.hidden : ''}`}>
       <div className={`container ${styles.navContainer}`}>
         {/* Logo */}
         <Link href="/" className={styles.logo}>

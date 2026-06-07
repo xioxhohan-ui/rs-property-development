@@ -64,7 +64,7 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
   const allImages = [property.image, ...(property.images || [])].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 pb-28 lg:pb-12">
       <div className="container">
         {/* Header Section */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -95,9 +95,9 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
                 <Image src={allImages[activeImage]} alt="Property Image" fill className="object-cover" />
               </div>
               {allImages.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-2">
+                <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory touch-pan-x scrollbar-hide">
                   {allImages.map((img: string, idx: number) => (
-                    <button key={idx} onClick={() => setActiveImage(idx)} className={`relative h-20 w-32 flex-shrink-0 rounded-md overflow-hidden border-2 ${activeImage === idx ? 'border-primary' : 'border-transparent'}`}>
+                    <button key={idx} onClick={() => setActiveImage(idx)} className={`relative h-20 w-32 flex-shrink-0 rounded-md overflow-hidden border-2 snap-center ${activeImage === idx ? 'border-primary' : 'border-transparent'}`}>
                       <Image src={img} alt="Thumbnail" fill className="object-cover" />
                     </button>
                   ))}
@@ -127,19 +127,19 @@ export default function ListingDetailTemplate({ slug, category }: ListingDetailT
           {/* Sidebar */}
           <div className="space-y-8">
             {/* Contact Floating Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border sticky top-24">
-              <h3 className="font-bold text-lg mb-4">Interested in this property?</h3>
-              <div className="space-y-3">
-                <a href={`tel:${property.contactNumber || '+8801814963730'}`} className="flex items-center justify-center w-full gap-2 bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
-                  <Phone size={18} /> Call Now
+            <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.1)] lg:sticky lg:top-24 lg:z-10 lg:p-6 lg:rounded-xl lg:bg-white lg:dark:bg-gray-800 lg:border lg:shadow-sm">
+              <h3 className="hidden lg:block font-bold text-lg mb-4">Interested in this property?</h3>
+              <div className="flex flex-row lg:flex-col gap-2 lg:gap-3">
+                <a href={`tel:${property.contactNumber || '+8801814963730'}`} className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 lg:py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors text-sm lg:text-base">
+                  <Phone size={18} /> <span className="hidden sm:inline">Call</span>
                 </a>
-                <a href={`https://wa.me/${(property.whatsappNumber || '+8801814963730').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full gap-2 bg-[#25D366] text-white py-3 rounded-lg font-medium hover:bg-[#20b858] transition-colors">
-                  <MessageCircle size={18} /> WhatsApp
+                <a href={`https://wa.me/${(property.whatsappNumber || '+8801814963730').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 lg:py-3 rounded-lg font-medium hover:bg-[#20b858] transition-colors text-sm lg:text-base">
+                  <MessageCircle size={18} /> <span className="hidden sm:inline">WhatsApp</span>
                 </a>
-                <button className="flex items-center justify-center w-full gap-2 border border-input bg-background py-3 rounded-lg font-medium hover:bg-accent transition-colors">
+                <button className="hidden lg:flex items-center justify-center w-full gap-2 border border-input bg-background py-3 rounded-lg font-medium hover:bg-accent transition-colors">
                   <Mail size={18} /> Send Email Inquiry
                 </button>
-                <div className="pt-4 mt-4 border-t flex justify-center gap-4 text-muted-foreground">
+                <div className="hidden lg:flex pt-4 mt-4 border-t justify-center gap-4 text-muted-foreground">
                   <button className="flex flex-col items-center hover:text-primary transition-colors"><Share2 size={20} /><span className="text-xs mt-1">Share</span></button>
                 </div>
               </div>

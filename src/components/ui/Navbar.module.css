@@ -17,6 +17,10 @@
   box-shadow: var(--shadow-sm);
 }
 
+.hidden {
+  transform: translateY(-100%);
+}
+
 .navContainer {
   display: flex;
   align-items: center;
@@ -123,7 +127,7 @@
 
 .mobileNavLink {
   display: block;
-  padding: 0.5rem 0;
+  padding: 1rem 0;
   font-weight: 500;
   font-size: 1.1rem;
   border-bottom: 1px solid var(--border-color);
