@@ -141,7 +141,8 @@ export default function InquiryForm({ propertyId, propertyTitle, propertySlug, c
       <button 
         type="submit" 
         disabled={loading}
-        className="w-full flex h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+        className="w-full flex h-11 items-center justify-center rounded-md px-4 py-2 text-sm font-bold hover:opacity-90 disabled:opacity-50 transition-all mt-4 shadow-sm"
+        style={{ backgroundColor: '#1E466B', color: '#FFFFFF' }}
       >
         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Send Inquiry'}
       </button>

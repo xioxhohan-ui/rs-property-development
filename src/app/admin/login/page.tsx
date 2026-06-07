@@ -106,7 +106,8 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 w-full mt-4"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-bold transition-all disabled:pointer-events-none disabled:opacity-50 hover:opacity-90 h-10 w-full mt-6 shadow-sm"
+            style={{ backgroundColor: '#1E466B', color: '#FFFFFF' }}
           >
             {loading ? (
               <>
