@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 async function getBlogPost(slug: string) {
   try {
-    const snapshot = await db.collection('posts').where('slug', '==', slug).limit(1).get();
+    const snapshot = await db.collection('blogs').where('slug', '==', slug).limit(1).get();
     if (snapshot.empty) {
       return null;
     }
@@ -37,17 +37,17 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
     <div className={styles.page}>
       {/* Hero Image */}
       <div className={styles.heroImageContainer}>
-        <Image src={post.image} alt={post.title} fill className={styles.heroImage} priority />
+        <Image src={post.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'} alt={post.title || 'Blog Post'} fill className={styles.heroImage} priority />
         <div className={styles.heroOverlay}></div>
         <div className={`container ${styles.heroContent}`}>
           <Link href="/blog" className={styles.backBtn}>
             <ArrowLeft size={20} /> Back to Blog
           </Link>
-          <div className={styles.badge}>{post.category}</div>
-          <h1 className={styles.title}>{post.title}</h1>
+          <div className={styles.badge}>{post.category || 'Blog'}</div>
+          <h1 className={styles.title}>{post.title || 'Untitled'}</h1>
           <div className={styles.meta}>
-            <span className={styles.metaItem}><Calendar size={16} /> {post.date}</span>
-            <span className={styles.metaItem}><User size={16} /> {post.author}</span>
+            <span className={styles.metaItem}><Calendar size={16} /> {post.date || new Date().toISOString().split('T')[0]}</span>
+            <span className={styles.metaItem}><User size={16} /> {post.author || 'Admin'}</span>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           <article className={styles.article}>
             <div 
               className={styles.prose} 
-              dangerouslySetInnerHTML={{ __html: post.content }} 
+              dangerouslySetInnerHTML={{ __html: post.content || '' }} 
             />
             
             <div className={styles.tags}>

@@ -9,11 +9,16 @@ import { db } from '@/lib/firebase/admin';
 
 async function getFeaturedPlots() {
   try {
-    const snapshot = await db.collection('plots').limit(3).get();
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
+    const snapshot = await db.collection('properties').limit(3).get();
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      delete data.createdAt;
+      delete data.updatedAt;
+      return {
+        id: doc.id,
+        ...data
+      };
+    }) as any[];
   } catch (error) {
     console.error('Error fetching featured plots:', error);
     return [];

@@ -7,9 +7,12 @@ export const dynamic = 'force-dynamic';
 
 async function getBlog(id: string) {
   try {
-    const doc = await db.collection('posts').doc(id).get();
+    const doc = await db.collection('blogs').doc(id).get();
     if (!doc.exists) return null;
-    return { id: doc.id, ...doc.data() } as any;
+    const data = doc.data() || {};
+    delete data.createdAt;
+    delete data.updatedAt;
+    return { id: doc.id, ...data } as any;
   } catch (error) {
     console.error('Error fetching blog:', error);
     return null;
@@ -34,7 +37,7 @@ export default async function EditBlogPage({ params }: { params: Promise<{ id: s
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Edit Post</h1>
         <p className="text-muted-foreground mt-1">
-          Update the content for "{blog.title}".
+          Update the content for "{blog.title || 'Untitled'}".
         </p>
       </div>
 

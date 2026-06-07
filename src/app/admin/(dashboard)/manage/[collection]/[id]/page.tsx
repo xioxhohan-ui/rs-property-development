@@ -9,7 +9,10 @@ async function getProperty(collectionName: string, id: string) {
   try {
     const doc = await db.collection(collectionName).doc(id).get();
     if (!doc.exists) return null;
-    return { id: doc.id, ...doc.data() } as any;
+    const data = doc.data() || {};
+    delete data.createdAt;
+    delete data.updatedAt;
+    return { id: doc.id, ...data } as any;
   } catch (error) {
     console.error(`Error fetching property from ${collectionName}:`, error);
     return null;
@@ -36,7 +39,7 @@ export default async function EditManageCollectionPage({ params }: { params: Pro
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Edit {displayTitle} Item</h1>
         <p className="text-muted-foreground mt-1">
-          Update the details for "{property.title}".
+          Update the details for "{property.title || 'Untitled'}".
         </p>
       </div>
 

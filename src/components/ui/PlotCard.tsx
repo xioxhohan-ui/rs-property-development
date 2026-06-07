@@ -29,13 +29,15 @@ export const PlotCard: React.FC<PlotCardProps> = ({
   verified,
   image,
 }) => {
+  const linkHref = slug.includes('/') ? `/${slug}` : `/property/${slug}`;
+
   return (
     <motion.div
       className={styles.card}
       whileHover={{ y: -8 }}
       transition={{ duration: 0.3 }}
     >
-      <Link href={`/plots/${slug}`} className={styles.imageWrapper}>
+      <Link href={linkHref} className={styles.imageWrapper}>
         <div className={styles.imageContainer}>
           <Image
             src={image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80'}
@@ -57,7 +59,7 @@ export const PlotCard: React.FC<PlotCardProps> = ({
       
       <div className={styles.content}>
         <div className={styles.price}>{price}</div>
-        <Link href={`/plots/${slug}`}>
+        <Link href={linkHref}>
           <h3 className={styles.title}>{title}</h3>
         </Link>
         
@@ -74,7 +76,7 @@ export const PlotCard: React.FC<PlotCardProps> = ({
         </div>
         
         <div className={styles.footer}>
-          <Link href={`/plots/${slug}`} className={styles.viewBtn}>
+          <Link href={linkHref} className={styles.viewBtn}>
             View Details
           </Link>
         </div>

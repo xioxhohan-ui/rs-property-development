@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { MapPin, Phone, MessageCircle, Share2, Maximize2, ShieldCheck, Mail } from 'lucide-react';
 import { PlotCard } from '@/components/ui/PlotCard';
 import InquiryForm from '@/components/listings/InquiryForm';
+import { notFound } from 'next/navigation';
 
 interface ListingDetailTemplateProps {
   slug: string;
@@ -58,7 +59,7 @@ export default function ListingDetailTemplate({ slug, category, collectionName =
   }
 
   if (!property) {
-    return <div className="min-h-screen pt-24 pb-12 flex items-center justify-center text-xl text-muted-foreground">Property not found.</div>;
+    notFound();
   }
 
   const allImages = [property.coverImage, property.image, ...(property.galleryImages || []), ...(property.images || [])].filter(Boolean);

@@ -90,14 +90,14 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
       };
 
       if (mode === 'create') {
-        await addDoc(collection(dbClient, 'posts'), {
+        await addDoc(collection(dbClient, 'blogs'), {
           ...blogData,
           author: 'Admin', // Static for now, can be linked to current user later
           date: new Date().toISOString(),
           createdAt: serverTimestamp(),
         });
       } else if (initialData?.id) {
-        const docRef = doc(dbClient, 'posts', initialData.id);
+        const docRef = doc(dbClient, 'blogs', initialData.id);
         await updateDoc(docRef, blogData);
       }
 

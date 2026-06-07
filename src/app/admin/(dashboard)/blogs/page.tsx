@@ -8,11 +8,16 @@ export const dynamic = 'force-dynamic';
 
 async function getBlogs() {
   try {
-    const snapshot = await db.collection('posts').orderBy('createdAt', 'desc').get();
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as any[];
+    const snapshot = await db.collection('blogs').orderBy('createdAt', 'desc').get();
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      delete data.createdAt;
+      delete data.updatedAt;
+      return {
+        id: doc.id,
+        ...data
+      };
+    }) as any[];
   } catch (error) {
     console.error('Error fetching blogs:', error);
     return [];
@@ -95,7 +100,7 @@ export default async function AdminBlogsPage() {
                           <Edit className="h-4 w-4" />
                         </button>
                       </Link>
-                      <DeleteActionButton collectionName="posts" documentId={post.id} />
+                      <DeleteActionButton collectionName="blogs" documentId={post.id} />
                     </div>
                   </td>
                 </tr>

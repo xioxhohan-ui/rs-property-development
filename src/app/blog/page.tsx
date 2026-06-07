@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 
 async function getBlogPosts() {
   try {
-    const snapshot = await db.collection('posts').get();
+    const snapshot = await db.collection('blogs').get();
     return snapshot.docs.map(doc => {
       const data = doc.data();
       delete data.createdAt;
