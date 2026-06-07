@@ -1,6 +1,6 @@
 import React from 'react';
 import { db } from '@/lib/firebase/admin';
-import PropertyForm from '../../_components/PropertyForm';
+import PropertyForm from '../_components/PropertyForm';
 import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
