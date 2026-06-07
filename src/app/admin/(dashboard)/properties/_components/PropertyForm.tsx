@@ -39,6 +39,11 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
   const [featured, setFeatured] = useState(initialData?.featured || false);
   const [verified, setVerified] = useState(initialData?.verified || false);
 
+  // SEO Fields
+  const [seoTitle, setSeoTitle] = useState(initialData?.seoTitle || '');
+  const [seoDescription, setSeoDescription] = useState(initialData?.seoDescription || '');
+  const [seoKeywords, setSeoKeywords] = useState(initialData?.seoKeywords || '');
+
   // Images
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverImageUrl, setCoverImageUrl] = useState(initialData?.image || '');
@@ -47,9 +52,16 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
 
   // Auto-generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    const newTitle = e.target.value;
+    setTitle(newTitle);
     if (mode === 'create') {
-      setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
+      setSlug(newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
+      if (!seoTitle || seoTitle.startsWith(title)) {
+        setSeoTitle(`${newTitle} | RS Property`);
+      }
+      if (!seoDescription || seoDescription.startsWith('Find the best')) {
+        setSeoDescription(`Find the best ${newTitle}. Luxury real estate property in Bangladesh.`);
+      }
     }
   };
 
@@ -96,6 +108,9 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
         verified,
         image: finalCoverUrl,
         images: galleryUrls,
+        seoTitle,
+        seoDescription,
+        seoKeywords,
         updatedAt: serverTimestamp(),
       };
 
@@ -288,6 +303,48 @@ export default function PropertyForm({ mode, initialData }: PropertyFormProps) {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* SEO Settings */}
+      <div className="rounded-xl border bg-card text-card-foreground shadow p-6 border-blue-500/20">
+        <div className="flex items-center justify-between mb-6 border-b pb-2">
+          <h2 className="text-xl font-semibold flex items-center text-blue-600 dark:text-blue-400">
+            <span className="bg-blue-100 dark:bg-blue-900 p-1.5 rounded-md mr-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+            Automated SEO Metadata
+          </h2>
+          <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 rounded-full font-medium">Auto-Generated</span>
+        </div>
+        
+        <div className="grid grid-cols-1 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium flex justify-between">
+              <span>SEO Meta Title</span>
+              <span className={`text-xs ${seoTitle.length > 60 ? 'text-amber-500' : 'text-emerald-500'}`}>{seoTitle.length}/60 chars</span>
+            </label>
+            <input value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Title for Search Engines" />
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium flex justify-between">
+              <span>SEO Meta Description</span>
+              <span className={`text-xs ${seoDescription.length > 160 ? 'text-amber-500' : 'text-emerald-500'}`}>{seoDescription.length}/160 chars</span>
+            </label>
+            <textarea value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} rows={3} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Description for Search Engines" />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Meta Keywords (Comma separated)</label>
+            <input value={seoKeywords} onChange={(e) => setSeoKeywords(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="luxury plot, real estate, purbachal" />
+          </div>
+        </div>
+        <div className="mt-4 p-4 bg-muted rounded-md border">
+          <p className="text-xs font-medium text-muted-foreground mb-2">Google Search Preview:</p>
+          <div className="text-blue-600 text-lg hover:underline cursor-pointer truncate">{seoTitle || 'Property Title | RS Property'}</div>
+          <div className="text-emerald-700 text-sm truncate">https://rsproperty.com/plots/{slug || 'property-slug'}</div>
+          <div className="text-sm text-foreground/80 line-clamp-2 mt-1">{seoDescription || 'Property description will appear here in search results.'}</div>
         </div>
       </div>
 

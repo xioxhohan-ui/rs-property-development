@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Building, FileText, Mail, Users, Map, Settings, Menu, X, LogOut } from 'lucide-react';
+import { LayoutDashboard, Building, FileText, Mail, Users, Map, Settings, Menu, X, LogOut, TrendingUp } from 'lucide-react';
 import { auth } from '@/lib/firebase/client';
 import { signOut } from 'firebase/auth';
 
@@ -11,9 +11,10 @@ const NAV_LINKS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/properties', label: 'Properties', icon: Building },
   { href: '/admin/blogs', label: 'Blogs', icon: FileText },
+  { href: '/admin/seo', label: 'SEO Center', icon: TrendingUp },
   { href: '/admin/inquiries', label: 'Inquiries', icon: Mail },
   { href: '/admin/leads', label: 'Leads', icon: Users },
-  { href: '/admin/users', label: 'Users', icon: Users }, // Reusing Users icon
+  { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/districts', label: 'Districts', icon: Map },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];

@@ -31,6 +31,7 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
   // SEO fields
   const [metaTitle, setMetaTitle] = useState(initialData?.seo?.title || '');
   const [metaDescription, setMetaDescription] = useState(initialData?.seo?.description || '');
+  const [metaKeywords, setMetaKeywords] = useState(initialData?.seo?.keywords || '');
 
   // Images
   const [coverImage, setCoverImage] = useState<File | null>(null);
@@ -38,9 +39,13 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
 
   // Auto-generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    const newTitle = e.target.value;
+    setTitle(newTitle);
     if (mode === 'create') {
-      setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
+      setSlug(newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
+      if (!metaTitle || metaTitle.startsWith(title)) {
+        setMetaTitle(`${newTitle} | RS Property Blog`);
+      }
     }
   };
 
@@ -79,6 +84,7 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
         seo: {
           title: metaTitle || title,
           description: metaDescription || excerpt,
+          keywords: metaKeywords,
         },
         updatedAt: serverTimestamp(),
       };
@@ -197,18 +203,42 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
         </div>
       </div>
 
-      {/* SEO */}
-      <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
-        <h2 className="text-xl font-semibold mb-6 border-b pb-2">SEO Settings</h2>
+      {/* SEO Settings */}
+      <div className="rounded-xl border bg-card text-card-foreground shadow p-6 border-blue-500/20">
+        <div className="flex items-center justify-between mb-6 border-b pb-2">
+          <h2 className="text-xl font-semibold flex items-center text-blue-600 dark:text-blue-400">
+            <span className="bg-blue-100 dark:bg-blue-900 p-1.5 rounded-md mr-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+            Automated SEO Metadata
+          </h2>
+          <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 rounded-full font-medium">Auto-Generated</span>
+        </div>
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Meta Title</label>
+            <label className="text-sm font-medium flex justify-between">
+              <span>SEO Meta Title</span>
+              <span className={`text-xs ${metaTitle.length > 60 ? 'text-amber-500' : 'text-emerald-500'}`}>{metaTitle.length}/60 chars</span>
+            </label>
             <input value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Leave blank to use post title" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Meta Description</label>
+            <label className="text-sm font-medium flex justify-between">
+              <span>SEO Meta Description</span>
+              <span className={`text-xs ${metaDescription.length > 160 ? 'text-amber-500' : 'text-emerald-500'}`}>{metaDescription.length}/160 chars</span>
+            </label>
             <textarea value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} rows={2} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="Leave blank to use post excerpt" />
           </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Meta Keywords (Comma separated)</label>
+            <input value={metaKeywords} onChange={(e) => setMetaKeywords(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" placeholder="real estate, blog, investment" />
+          </div>
+        </div>
+        <div className="mt-4 p-4 bg-muted rounded-md border">
+          <p className="text-xs font-medium text-muted-foreground mb-2">Google Search Preview:</p>
+          <div className="text-blue-600 text-lg hover:underline cursor-pointer truncate">{metaTitle || title || 'Post Title | RS Property Blog'}</div>
+          <div className="text-emerald-700 text-sm truncate">https://rsproperty.com/blog/{slug || 'post-slug'}</div>
+          <div className="text-sm text-foreground/80 line-clamp-2 mt-1">{metaDescription || excerpt || 'Post excerpt will appear here in search results.'}</div>
         </div>
       </div>
 
