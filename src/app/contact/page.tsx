@@ -50,11 +50,28 @@ export default function ContactPage() {
                 <div className={styles.iconWrapper}>
                   <MessageCircle size={24} />
                 </div>
-                <div>
-                  <h3>WhatsApp</h3>
-                  <p>+880 1814963730 (Shakil Hossain Rifat)</p>
-                  <p>+880 1712053941 (Mr. Roni)</p>
-                  <Button variant="outline" size="sm" className={styles.actionBtn}>Chat on WhatsApp</Button>
+                <div style={{ width: '100%' }}>
+                  <h3 style={{ marginBottom: '12px' }}>WhatsApp</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <a 
+                      href="https://wa.me/8801814963730" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', color: '#166534', textDecoration: 'none', fontWeight: 500, fontSize: '14px', width: 'fit-content' }}
+                    >
+                      <MessageCircle size={18} color="#25D366" /> 
+                      +880 1814963730 (Shakil Hossain)
+                    </a>
+                    <a 
+                      href="https://wa.me/8801712053941" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', color: '#166534', textDecoration: 'none', fontWeight: 500, fontSize: '14px', width: 'fit-content' }}
+                    >
+                      <MessageCircle size={18} color="#25D366" /> 
+                      +880 1712053941 (Mr. Roni)
+                    </a>
+                  </div>
                 </div>
               </div>
               
