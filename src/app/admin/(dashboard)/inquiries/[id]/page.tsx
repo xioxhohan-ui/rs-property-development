@@ -52,7 +52,7 @@ export default async function InquiryDetailPage({
   const isSeller = type === 'seller';
 
   const propertyUrl = inquiry.propertySlug && inquiry.category 
-    ? \`/\${inquiry.category.toLowerCase().replace(' ', '-')}/\${inquiry.propertySlug}\`
+    ? `/${inquiry.category.toLowerCase().replace(' ', '-')}/${inquiry.propertySlug}`
     : null;
     
   const customerPhone = inquiry.customerPhone || inquiry.phone || '';

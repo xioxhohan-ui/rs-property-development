@@ -49,7 +49,7 @@ export default function BecomeASellerPage() {
 
       // 2. Create Lead
       await addDoc(collection(dbClient, 'leads'), {
-        leadId: \`L-\${Math.floor(1000 + Math.random() * 9000)}\`,
+        leadId: `L-${Math.floor(1000 + Math.random() * 9000)}`,
         source: 'Seller Inquiry',
         sellerInquiryId: inquiryRef.id,
         customerName: formData.fullName,
