@@ -105,7 +105,7 @@ export default function BecomeASellerPage() {
   return (
     <div className="min-h-screen bg-secondary pt-24 pb-20">
       {/* Header Section */}
-      <div className="bg-primary text-primary-foreground py-16 px-4">
+      <div className="bg-primary text-white py-16 px-4">
         <div className="container max-w-4xl text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
