@@ -215,7 +215,7 @@ export default function SEODashboard() {
   const metrics = [
     { title: 'Organic Traffic', value: '12,450', change: '+14.2% this month', positive: true, icon: Globe, color: 'bg-blue-100 text-blue-600', spark: generateSparkData(1000) },
     { title: 'Indexed Pages', value: '142', change: '+12 new this week', positive: true, icon: Eye, color: 'bg-purple-100 text-purple-600', spark: generateSparkData(140) },
-    { title: 'Avg. Position', value: '14.2', change: '↑ 2.1 positions', positive: true, icon: Target, color: 'bg-amber-100 text-amber-600', spark: generateSparkData(14) },
+    { title: 'Avg. Position', value: '14.2', change: '2.1 positions', positive: true, icon: Target, color: 'bg-amber-100 text-amber-600', spark: generateSparkData(14) },
     { title: 'Click-Through Rate', value: '4.8%', change: '+0.6% vs last month', positive: true, icon: MousePointerClick, color: 'bg-emerald-100 text-emerald-600', spark: generateSparkData(48) },
     { title: 'Impressions', value: '258K', change: '+22% this month', positive: true, icon: BarChart3, color: 'bg-pink-100 text-pink-600', spark: generateSparkData(25000) },
     { title: 'Total Backlinks', value: '1,840', change: '+34 new this week', positive: true, icon: LinkIcon, color: 'bg-teal-100 text-teal-600', spark: generateSparkData(1800) },

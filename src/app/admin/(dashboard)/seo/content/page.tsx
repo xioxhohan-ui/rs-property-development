@@ -5,7 +5,7 @@ import SEOHeader from '../_components/SEOHeader';
 import {
   CheckCircle, XCircle, AlertTriangle, Loader2, Search,
   Hash, FileText, Link as LinkIcon, Image as ImageIcon,
-  BookOpen, AlignLeft, BarChart3
+  BookOpen, AlignLeft, BarChart3, ArrowRight
 } from 'lucide-react';
 
 interface AnalysisResult {
@@ -192,7 +192,7 @@ export default function ContentAnalyzerPage() {
                 <div className="space-y-1 divide-y">
                   <CheckItem ok={result.title.ok} msg={`Title: ${result.title.length} chars — ${result.title.msg}`} />
                   <CheckItem ok={result.description.ok} msg={`Description: ${result.description.length} chars — ${result.description.msg}`} />
-                  <CheckItem ok={result.wordCount >= 600} msg={`Word count: ${result.wordCount} words ${result.wordCount < 600 ? '(min 600 recommended)' : '✓'}`} />
+                  <CheckItem ok={result.wordCount >= 600} msg={`Word count: ${result.wordCount} words ${result.wordCount < 600 ? '(min 600 recommended)' : '(Good)'}`} />
                   <CheckItem ok={result.headings.h1 === 1} msg={`H1 headings: ${result.headings.h1} (need exactly 1)`} />
                   <CheckItem ok={result.headings.h2 >= 2} msg={`H2 subheadings: ${result.headings.h2} (2+ recommended)`} />
                   {keyword && <CheckItem ok={result.keywordDensity > 0 && result.keywordDensity <= 3} msg={`Keyword density: ${result.keywordDensity}% (1–3% ideal)`} />}
@@ -220,7 +220,7 @@ export default function ContentAnalyzerPage() {
                   <div className="space-y-2">
                     {result.suggestions.map((s, i) => (
                       <div key={i} className="text-xs text-amber-700 flex items-start gap-2">
-                        <span className="shrink-0 mt-0.5">→</span>{s}
+                        <ArrowRight className="h-4 w-4 shrink-0 mt-0.5" />{s}
                       </div>
                     ))}
                   </div>

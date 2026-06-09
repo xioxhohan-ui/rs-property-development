@@ -12,7 +12,7 @@ const STATIC_CHECKS = [
   { category: 'Canonicals', label: 'Canonical URLs set on all pages', status: 'ok' },
   { category: 'Canonicals', label: 'No duplicate canonical conflicts', status: 'ok' },
   { category: 'Redirects', label: 'No redirect chains (3+ hops)', status: 'ok' },
-  { category: 'Redirects', label: 'HTTP → HTTPS redirect active', status: 'ok' },
+  { category: 'Redirects', label: 'HTTP to HTTPS redirect active', status: 'ok' },
   { category: 'Performance', label: 'sitemap.xml accessible', status: 'ok' },
   { category: 'Performance', label: 'robots.txt configured', status: 'ok' },
   { category: 'Performance', label: 'No 4xx errors in last 24h', status: 'warning', detail: '1 broken link found' },
@@ -136,9 +136,9 @@ export default function TechnicalSEOPage() {
             <form onSubmit={handleAddIssue} className="space-y-3">
               <select value={newIssue.type} onChange={e => setNewIssue({ ...newIssue, type: e.target.value })}
                 className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
-                <option value="error">🔴 Error</option>
-                <option value="warning">🟡 Warning</option>
-                <option value="ok">🟢 Fixed</option>
+                <option value="error">Error</option>
+                <option value="warning">Warning</option>
+                <option value="ok">Fixed</option>
               </select>
               <input value={newIssue.msg} onChange={e => setNewIssue({ ...newIssue, msg: e.target.value })}
                 placeholder="Describe the technical issue..."

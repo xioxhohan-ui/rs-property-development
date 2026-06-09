@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Search, Folder, MapPin, Banknote } from 'lucide-react';
 import ListingGrid from './ListingGrid';
 
 interface ListingPageTemplateProps {
@@ -137,25 +138,25 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
           <div className="flex flex-wrap items-center gap-2 mt-4">
             {search.trim() && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--accent-color)]/10 text-[var(--accent-color)] text-xs font-semibold">
-                🔍 "{search}" 
+                <Search size={14} className="inline-block relative -top-0.5" /> "{search}" 
                 <button onClick={() => setSearch('')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}
             {selectedType !== 'Property Type' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--light-accent)]/20 text-[var(--accent-color)] text-xs font-semibold">
-                📂 {selectedType} 
+                <Folder size={14} className="inline-block relative -top-0.5" /> {selectedType} 
                 <button onClick={() => setSelectedType('Property Type')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}
             {selectedDistrict !== 'District' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--light-accent)]/20 text-[var(--accent-color)] text-xs font-semibold">
-                📍 {selectedDistrict} 
+                <MapPin size={14} className="inline-block relative -top-0.5" /> {selectedDistrict} 
                 <button onClick={() => setSelectedDistrict('District')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}
             {selectedPrice !== 'Price Range' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--light-accent)]/20 text-[var(--accent-color)] text-xs font-semibold">
-                💰 {selectedPrice} 
+                <Banknote size={14} className="inline-block relative -top-0.5" /> {selectedPrice} 
                 <button onClick={() => setSelectedPrice('Price Range')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}

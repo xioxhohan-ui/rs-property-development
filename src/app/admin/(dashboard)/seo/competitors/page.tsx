@@ -90,13 +90,13 @@ export default function CompetitorsPage() {
             <div className="mt-3 grid grid-cols-2 gap-2">
               <a href={`https://ahrefs.com/site-explorer/overview/v2/subdomains/live?target=${comp.domain}`}
                 target="_blank" rel="noopener noreferrer"
-                className="text-xs text-center p-2 rounded-md border hover:bg-muted transition-colors">
-                Ahrefs ↗
+                className="text-xs text-center flex items-center justify-center gap-1 p-2 rounded-md border hover:bg-muted transition-colors">
+                Ahrefs <ArrowUpRight className="h-3 w-3" />
               </a>
               <a href={`https://www.semrush.com/analytics/overview/?q=${comp.domain}`}
                 target="_blank" rel="noopener noreferrer"
-                className="text-xs text-center p-2 rounded-md border hover:bg-muted transition-colors">
-                SEMrush ↗
+                className="text-xs text-center flex items-center justify-center gap-1 p-2 rounded-md border hover:bg-muted transition-colors">
+                SEMrush <ArrowUpRight className="h-3 w-3" />
               </a>
             </div>
           </div>

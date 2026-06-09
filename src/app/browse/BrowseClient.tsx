@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { dbClient } from '@/lib/firebase/client';
 import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import { PlotCard } from '@/components/ui/PlotCard';
-import { Search, Filter, Loader2 } from 'lucide-react';
+import { Search, Filter, Loader2, Star, CheckCircle, Sparkles, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BrowseClient() {
@@ -139,7 +139,7 @@ export default function BrowseClient() {
         {featuredItems.length > 0 && (
           <section>
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <span className="text-amber-500">★</span> Featured Listings
+              <Star className="w-6 h-6 text-amber-500 fill-amber-500" /> Featured Listings
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {featuredItems.map(item => (
@@ -166,7 +166,7 @@ export default function BrowseClient() {
         {verifiedItems.length > 0 && verifiedItems.length !== featuredItems.length && (
           <section>
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <span className="text-emerald-500">✓</span> Verified Listings
+              <CheckCircle className="w-6 h-6 text-emerald-500" /> Verified Listings
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {verifiedItems.map(item => (
@@ -193,7 +193,7 @@ export default function BrowseClient() {
         {filteredItems.filter(item => item.priorityOrder > 0).length > 0 && (
           <section>
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <span className="text-purple-500">✦</span> Premium Listings
+              <Sparkles className="w-6 h-6 text-purple-500" /> Premium Listings
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredItems.filter(item => item.priorityOrder > 0).map(item => (
@@ -219,7 +219,7 @@ export default function BrowseClient() {
         {/* Recently Added Section */}
         <section>
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <span className="text-blue-500">🕒</span> Recently Added / Latest Listings
+            <Clock className="w-6 h-6 text-blue-500" /> Recently Added / Latest Listings
           </h2>
           {filteredItems.length === 0 ? (
             <div className="text-center py-20 bg-secondary/30 rounded-2xl border border-border border-dashed">
