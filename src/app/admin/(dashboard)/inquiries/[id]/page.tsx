@@ -59,7 +59,7 @@ export default async function InquiryDetailPage({
   const customerName = inquiry.customerName || inquiry.fullName || 'Unknown';
   const customerEmail = inquiry.customerEmail || inquiry.email || '';
   const message = inquiry.message || inquiry.description || 'No message provided.';
-  const whatsappLink = \`https://wa.me/\${customerPhone.replace(/[^0-9]/g, '')}\`;
+  const whatsappLink = `https://wa.me/${customerPhone.replace(/[^0-9]/g, '')}`;
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">

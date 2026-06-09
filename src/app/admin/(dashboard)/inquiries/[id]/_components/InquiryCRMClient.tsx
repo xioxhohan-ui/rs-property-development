@@ -76,7 +76,7 @@ export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes, type 
                 onClick={() => handleStatusChange(s)}
                 className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
                   status === s 
-                    ? \`\${STATUS_COLORS[s]} border-transparent ring-2 ring-primary ring-offset-1 dark:ring-offset-background shadow-sm\` 
+                    ? `${STATUS_COLORS[s]} border-transparent ring-2 ring-primary ring-offset-1 dark:ring-offset-background shadow-sm` 
                     : 'bg-background text-muted-foreground hover:bg-muted border-input'
                 }`}
               >
