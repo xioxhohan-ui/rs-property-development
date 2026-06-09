@@ -22,6 +22,8 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
   const [selectedPrice, setSelectedPrice] = useState('Price Range');
   const [sortBy, setSortBy] = useState('newest');
 
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   const hasFilters = search.trim() || selectedType !== 'Property Type' || selectedDistrict !== 'District' || selectedPrice !== 'Price Range';
 
   const clearAll = () => {
@@ -33,195 +35,131 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#FAFAFA', paddingTop: '68px' }}>
+    <div className="min-h-screen bg-[var(--secondary-color)] pt-[68px]">
 
       {/* ── Hero ── */}
-      <div style={{ background: 'linear-gradient(135deg, #1E466B 0%, #1a5fa8 55%, #67BAF4 100%)', padding: '44px 0 80px' }}>
+      <div className="bg-brand-gradient pt-12 pb-24">
         <div className="container">
-          <h1 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 'clamp(1.75rem,4vw,2.75rem)', fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.2 }}>{title}</h1>
-          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', margin: 0, maxWidth: '540px' }}>{subtitle}</p>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-3 leading-tight">{title}</h1>
+          <p className="text-white/80 text-sm md:text-base max-w-xl">{subtitle}</p>
         </div>
       </div>
 
       {/* ── Search Bar ── */}
-      <div className="container" style={{ marginTop: '-32px', position: 'relative', zIndex: 20 }}>
-        <div style={{
-          background: '#fff',
-          borderRadius: '999px',
-          boxShadow: '0 4px 32px rgba(30,70,107,0.14)',
-          border: '1px solid #e8edf2',
-          display: 'flex',
-          alignItems: 'center',
-          padding: '6px 6px 6px 20px',
-          gap: 0,
-          flexWrap: 'nowrap',
-          overflow: 'hidden',
-        }}>
-          {/* Search Icon + Input */}
-          <svg style={{ flexShrink: 0, marginRight: '10px' }} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9aafc4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by location, district, or area..."
-            style={{
-              flex: '1 1 auto',
-              minWidth: '100px',
-              border: 'none',
-              outline: 'none',
-              background: 'transparent',
-              fontSize: '14px',
-              color: '#0D0D0D',
-              fontFamily: 'Inter,sans-serif',
-              padding: '8px 0',
-            }}
-          />
-
-          {/* Divider */}
-          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
-
-          {/* Property Type */}
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <select
-              value={selectedType}
-              onChange={e => setSelectedType(e.target.value)}
-              style={{
-                height: '40px',
-                paddingLeft: '14px',
-                paddingRight: '32px',
-                border: 'none',
-                background: 'transparent',
-                color: selectedType !== 'Property Type' ? '#1E466B' : '#64748b',
-                fontSize: '13px',
-                fontWeight: selectedType !== 'Property Type' ? 600 : 500,
-                fontFamily: 'Inter,sans-serif',
-                appearance: 'none',
-                WebkitAppearance: 'none',
-                cursor: 'pointer',
-                outline: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
-            <svg style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
-          </div>
-
-          {/* Divider */}
-          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
-
-          {/* District */}
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <select
-              value={selectedDistrict}
-              onChange={e => setSelectedDistrict(e.target.value)}
-              style={{
-                height: '40px',
-                paddingLeft: '14px',
-                paddingRight: '32px',
-                border: 'none',
-                background: 'transparent',
-                color: selectedDistrict !== 'District' ? '#1E466B' : '#64748b',
-                fontSize: '13px',
-                fontWeight: selectedDistrict !== 'District' ? 600 : 500,
-                fontFamily: 'Inter,sans-serif',
-                appearance: 'none',
-                WebkitAppearance: 'none',
-                cursor: 'pointer',
-                outline: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
-            </select>
-            <svg style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
-          </div>
-
-          {/* Divider */}
-          <div style={{ width: '1px', height: '28px', background: '#e2e8f0', margin: '0 4px', flexShrink: 0 }} />
-
-          {/* Price Range */}
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <select
-              value={selectedPrice}
-              onChange={e => setSelectedPrice(e.target.value)}
-              style={{
-                height: '40px',
-                paddingLeft: '14px',
-                paddingRight: '32px',
-                border: 'none',
-                background: 'transparent',
-                color: selectedPrice !== 'Price Range' ? '#1E466B' : '#64748b',
-                fontSize: '13px',
-                fontWeight: selectedPrice !== 'Price Range' ? 600 : 500,
-                fontFamily: 'Inter,sans-serif',
-                appearance: 'none',
-                WebkitAppearance: 'none',
-                cursor: 'pointer',
-                outline: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {PRICE_RANGES.map(p => <option key={p} value={p}>{p}</option>)}
-            </select>
-            <svg style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
-          </div>
-
-          {/* Search Button */}
-          <button
-            style={{
-              flexShrink: 0,
-              marginLeft: '6px',
-              height: '44px',
-              padding: '0 22px',
-              borderRadius: '999px',
-              background: '#1E466B',
-              color: '#fff',
-              fontSize: '14px',
-              fontWeight: 600,
-              fontFamily: 'Inter,sans-serif',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '7px',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <div className="container relative z-20 -mt-8">
+        <div className="bg-white rounded-2xl md:rounded-full shadow-lg border border-[var(--border-color)] p-3 md:p-1.5 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0">
+          
+          {/* Top Row: Search Input & Mobile Filter Toggle */}
+          <div className="flex items-center flex-1 px-3 md:px-5 py-2 md:py-0 bg-[var(--secondary-color)]/50 md:bg-transparent rounded-xl md:rounded-none">
+            <svg className="flex-shrink-0 mr-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9aafc4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            Search
-          </button>
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search by location, district..."
+              className="w-full bg-transparent outline-none text-sm md:text-base text-[var(--text-color)] min-w-[100px]"
+            />
+            
+            {/* Mobile Filter Toggle */}
+            <button 
+              className="md:hidden p-2 ml-2 bg-white rounded-lg shadow-sm border border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)]"
+              onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            </button>
+          </div>
+
+          {/* Desktop & Collapsible Mobile Filters */}
+          <div className={`w-full md:w-auto flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0 ${isMobileFilterOpen ? 'flex' : 'hidden md:flex'}`}>
+            
+            {/* Divider */}
+            <div className="hidden md:block w-px h-7 bg-[var(--border-color)] mx-2 flex-shrink-0" />
+
+            {/* Property Type */}
+            <div className="relative flex-shrink-0 w-full md:w-auto">
+              <select
+                value={selectedType}
+                onChange={e => setSelectedType(e.target.value)}
+                className={`w-full md:w-auto h-12 md:h-10 pl-4 pr-10 border border-[var(--border-color)] md:border-none rounded-xl md:rounded-none bg-[var(--secondary-color)]/50 md:bg-transparent appearance-none outline-none text-sm ${selectedType !== 'Property Type' ? 'text-[var(--accent-color)] font-semibold' : 'text-[var(--text-muted)] font-medium'}`}
+              >
+                {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+              <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </div>
+
+            {/* Divider */}
+            <div className="hidden md:block w-px h-7 bg-[var(--border-color)] mx-2 flex-shrink-0" />
+
+            {/* District */}
+            <div className="relative flex-shrink-0 w-full md:w-auto">
+              <select
+                value={selectedDistrict}
+                onChange={e => setSelectedDistrict(e.target.value)}
+                className={`w-full md:w-auto h-12 md:h-10 pl-4 pr-10 border border-[var(--border-color)] md:border-none rounded-xl md:rounded-none bg-[var(--secondary-color)]/50 md:bg-transparent appearance-none outline-none text-sm ${selectedDistrict !== 'District' ? 'text-[var(--accent-color)] font-semibold' : 'text-[var(--text-muted)] font-medium'}`}
+              >
+                {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+              <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </div>
+
+            {/* Divider */}
+            <div className="hidden md:block w-px h-7 bg-[var(--border-color)] mx-2 flex-shrink-0" />
+
+            {/* Price Range */}
+            <div className="relative flex-shrink-0 w-full md:w-auto">
+              <select
+                value={selectedPrice}
+                onChange={e => setSelectedPrice(e.target.value)}
+                className={`w-full md:w-auto h-12 md:h-10 pl-4 pr-10 border border-[var(--border-color)] md:border-none rounded-xl md:rounded-none bg-[var(--secondary-color)]/50 md:bg-transparent appearance-none outline-none text-sm ${selectedPrice !== 'Price Range' ? 'text-[var(--accent-color)] font-semibold' : 'text-[var(--text-muted)] font-medium'}`}
+              >
+                {PRICE_RANGES.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+              <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </div>
+
+            {/* Search Button */}
+            <button
+              onClick={() => setIsMobileFilterOpen(false)}
+              className="w-full md:w-auto flex items-center justify-center gap-2 h-12 md:h-11 px-6 bg-[var(--accent-color)] hover:bg-[var(--accent-hover)] text-white rounded-xl md:rounded-full font-semibold text-sm transition-colors mt-2 md:mt-0 md:ml-2 flex-shrink-0"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              Search
+            </button>
+          </div>
         </div>
 
-        {/* ── Mobile Search Bar (stacked layout) ── */}
         {/* Active Tags Row */}
         {hasFilters && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '14px', alignItems: 'center' }}>
+          <div className="flex flex-wrap items-center gap-2 mt-4">
             {search.trim() && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(30,70,107,0.1)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
-                🔍 "{search}" <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--accent-color)]/10 text-[var(--accent-color)] text-xs font-semibold">
+                🔍 "{search}" 
+                <button onClick={() => setSearch('')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}
             {selectedType !== 'Property Type' && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(103,186,244,0.15)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
-                📂 {selectedType} <button onClick={() => setSelectedType('Property Type')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--light-accent)]/20 text-[var(--accent-color)] text-xs font-semibold">
+                📂 {selectedType} 
+                <button onClick={() => setSelectedType('Property Type')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}
             {selectedDistrict !== 'District' && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(103,186,244,0.15)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
-                📍 {selectedDistrict} <button onClick={() => setSelectedDistrict('District')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--light-accent)]/20 text-[var(--accent-color)] text-xs font-semibold">
+                📍 {selectedDistrict} 
+                <button onClick={() => setSelectedDistrict('District')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}
             {selectedPrice !== 'Price Range' && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(103,186,244,0.15)', color: '#1E466B', fontSize: '12px', fontWeight: 600 }}>
-                💰 {selectedPrice} <button onClick={() => setSelectedPrice('Price Range')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1E466B', padding: 0, lineHeight: 1, fontSize: '14px' }}>×</button>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--light-accent)]/20 text-[var(--accent-color)] text-xs font-semibold">
+                💰 {selectedPrice} 
+                <button onClick={() => setSelectedPrice('Price Range')} className="bg-transparent border-none text-[var(--accent-color)] text-sm leading-none ml-1">×</button>
               </span>
             )}
-            <button onClick={clearAll} style={{ padding: '5px 14px', borderRadius: '20px', background: '#1E466B', color: '#fff', fontSize: '12px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+            <button onClick={clearAll} className="px-4 py-1.5 rounded-full bg-[var(--accent-color)] text-white text-xs font-semibold transition-colors hover:bg-[var(--accent-hover)]">
               Clear all
             </button>
           </div>
@@ -229,33 +167,27 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
       </div>
 
       {/* ── Sort + Results Row ── */}
-      <div className="container" style={{ marginTop: '28px', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-        <p style={{ margin: 0, fontSize: '14px', color: '#5a6a7a', fontFamily: 'Inter,sans-serif' }}>
-          Showing results for <strong style={{ color: '#1E466B' }}>{title}</strong>
+      <div className="container mt-8 mb-6 flex flex-wrap items-center justify-between gap-4">
+        <p className="text-sm text-[var(--text-muted)]">
+          Showing results for <strong className="text-[var(--accent-color)] font-semibold">{title}</strong>
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '13px', color: '#9aafc4', fontFamily: 'Inter,sans-serif' }}>Sort:</span>
-          <div style={{ position: 'relative' }}>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-[var(--text-muted)]">Sort:</span>
+          <div className="relative">
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
-              style={{
-                height: '36px', paddingLeft: '12px', paddingRight: '30px',
-                borderRadius: '8px', border: '1.5px solid #e2e8f0',
-                background: '#fff', color: '#1E466B',
-                fontSize: '13px', fontWeight: 600, fontFamily: 'Inter,sans-serif',
-                appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer', outline: 'none',
-              }}
+              className="h-10 pl-3 pr-8 rounded-lg border-2 border-[var(--border-color)] bg-white text-[var(--accent-color)] text-sm font-semibold appearance-none outline-none cursor-pointer"
             >
               {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
             </select>
-            <svg style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1E466B" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
+            <svg className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
           </div>
         </div>
       </div>
 
       {/* ── Listing Grid ── */}
-      <div className="container" style={{ paddingBottom: '60px' }}>
+      <div className="container pb-16">
         <ListingGrid
           filterCategory={category}
           collectionName={collectionName}
@@ -266,34 +198,6 @@ export default function ListingPageTemplate({ title, subtitle, category, collect
           sortBy={sortBy}
         />
       </div>
-
-      {/* ── Mobile Sticky Search Bar ── */}
-      <style>{`
-        @media (max-width: 640px) {
-          .listing-pill-bar {
-            border-radius: 14px !important;
-            flex-direction: column !important;
-            padding: 12px !important;
-            gap: 10px !important;
-          }
-          .listing-pill-bar .pill-divider { display: none !important; }
-          .listing-pill-bar select {
-            width: 100% !important;
-            border: 1.5px solid #e2e8f0 !important;
-            border-radius: 9px !important;
-            background: #F8FAFC !important;
-            padding-left: 12px !important;
-          }
-          .listing-pill-bar .search-btn {
-            width: 100% !important;
-            justify-content: center !important;
-            border-radius: 10px !important;
-          }
-          .listing-pill-input-wrap {
-            width: 100% !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

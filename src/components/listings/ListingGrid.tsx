@@ -109,8 +109,8 @@ export default function ListingGrid({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
-        {[1, 2, 3, 4, 5, 6].map(i => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse">
+        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
           <div key={i} className="h-80 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
         ))}
       </div>
@@ -139,7 +139,7 @@ export default function ListingGrid({
         Showing <span className="font-bold" style={{ color: '#1E466B' }}>{filtered.length}</span> listing{filtered.length !== 1 ? 's' : ''}
         {search && <span> for "<span style={{ color: '#1E466B' }}>{search}</span>"</span>}
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filtered.map((prop) => (
           <PlotCard
             key={prop.id}
