@@ -75,7 +75,7 @@ export default async function InquiryDetailPage({
             <h1 className="text-3xl font-bold tracking-tight">
               {isSeller ? 'Seller Inquiry Details' : 'Property Inquiry Details'}
             </h1>
-            <span className={\`px-3 py-1 rounded-full text-xs font-semibold border \${STATUS_COLORS[inquiry.status] || 'bg-gray-100'}\`}>
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${STATUS_COLORS[inquiry.status] || 'bg-gray-100'}`}>
               {formatStatus(inquiry.status)}
             </span>
           </div>
@@ -112,7 +112,7 @@ export default async function InquiryDetailPage({
                       <Phone className="h-4 w-4 text-muted-foreground" />
                       {customerPhone}
                     </div>
-                    <a href={\`tel:\${customerPhone}\`} className="text-xs font-medium text-blue-600 hover:underline">Call</a>
+                    <a href={`tel:${customerPhone}`} className="text-xs font-medium text-blue-600 hover:underline">Call</a>
                   </div>
                   {customerEmail && (
                     <div className="flex items-center justify-between">
@@ -120,7 +120,7 @@ export default async function InquiryDetailPage({
                         <Mail className="h-4 w-4 text-muted-foreground" />
                         <span className="truncate max-w-[150px]">{customerEmail}</span>
                       </div>
-                      <a href={\`mailto:\${customerEmail}\`} className="text-xs font-medium text-blue-600 hover:underline">Email</a>
+                      <a href={`mailto:${customerEmail}`} className="text-xs font-medium text-blue-600 hover:underline">Email</a>
                     </div>
                   )}
                   {inquiry.whatsapp && (
@@ -129,7 +129,7 @@ export default async function InquiryDetailPage({
                         <MessageCircle className="h-4 w-4 text-[#25D366]" />
                         <span className="truncate max-w-[150px]">{inquiry.whatsapp} (WhatsApp)</span>
                       </div>
-                      <a href={\`https://wa.me/\${inquiry.whatsapp.replace(/[^0-9]/g, '')}\`} target="_blank" className="text-xs font-medium text-[#25D366] hover:underline">Chat</a>
+                      <a href={`https://wa.me/${inquiry.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" className="text-xs font-medium text-[#25D366] hover:underline">Chat</a>
                     </div>
                   )}
                 </div>
@@ -206,14 +206,14 @@ export default async function InquiryDetailPage({
           <div className="bg-card border rounded-xl shadow-sm p-5">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Quick Actions</h3>
             <div className="flex flex-wrap gap-3">
-              <a href={\`tel:\${customerPhone}\`} className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
+              <a href={`tel:${customerPhone}`} className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
                 <Phone className="h-4 w-4" /> Call {isSeller ? 'Seller' : 'Customer'}
               </a>
               <a href={whatsappLink} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white h-11 px-6 rounded-md text-sm font-medium hover:bg-[#20b858] transition-colors shadow-sm">
                 <MessageCircle className="h-4 w-4" /> Open WhatsApp
               </a>
               {customerEmail && (
-                <a href={\`mailto:\${customerEmail}\`} className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-secondary/80 transition-colors">
+                <a href={`mailto:${customerEmail}`} className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-secondary/80 transition-colors">
                   <Mail className="h-4 w-4" /> Send Email
                 </a>
               )}
