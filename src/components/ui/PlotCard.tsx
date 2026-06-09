@@ -53,7 +53,7 @@ export const PlotCard: React.FC<PlotCardProps> = ({
         </div>
         <div className={styles.badges}>
           {category && <span className={styles.badgeCategory}>{category}</span>}
-          <span className={styles.badgeType}>{type}</span>
+          {type && type.trim() !== '' && <span className={styles.badgeType}>{type}</span>}
           {verified && (
             <span className={styles.badgeVerified}>
               <ShieldCheck size={14} /> Verified
