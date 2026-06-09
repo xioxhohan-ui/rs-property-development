@@ -43,8 +43,11 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
   const [contactNumber, setContactNumber] = useState(initialData?.contactNumber || '');
   
   // Toggles
-  const [featured, setFeatured] = useState(initialData?.featured || false);
+  const [featured, setFeatured] = useState(initialData?.featured || false); // Legacy alias for featuredListing
   const [verified, setVerified] = useState(initialData?.verified || false);
+  const [showOnHomepage, setShowOnHomepage] = useState(initialData?.showOnHomepage || false);
+  const [featuredInBrowse, setFeaturedInBrowse] = useState(initialData?.featuredInBrowse || false);
+  const [priorityOrder, setPriorityOrder] = useState(initialData?.priorityOrder || 0);
 
   // SEO Fields
   const [seoTitle, setSeoTitle] = useState(initialData?.seoTitle || initialData?.metaTitle || '');
@@ -121,6 +124,9 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
         contactNumber,
         featured,
         verified,
+        showOnHomepage,
+        featuredInBrowse,
+        priorityOrder: Number(priorityOrder),
         image: finalCoverUrl,
         coverImage: finalCoverUrl, // Alias
         images: galleryUrls,
@@ -410,7 +416,7 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
       <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
         <h2 className="text-xl font-semibold mb-6 border-b pb-2">Options & Visibility</h2>
         
-        <div className="flex flex-col sm:flex-row gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6">
           <label className="flex items-center space-x-3 cursor-pointer">
             <input 
               type="checkbox" 
@@ -418,7 +424,7 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
               onChange={(e) => setFeatured(e.target.checked)}
               className="h-5 w-5 rounded border-input bg-background text-primary" 
             />
-            <span className="text-sm font-medium">Featured Property (Shows on Homepage)</span>
+            <span className="text-sm font-medium">Featured Listing</span>
           </label>
           
           <label className="flex items-center space-x-3 cursor-pointer">
@@ -428,8 +434,39 @@ export default function PropertyForm({ mode, initialData, collectionName = 'prop
               onChange={(e) => setVerified(e.target.checked)}
               className="h-5 w-5 rounded border-input bg-background text-primary" 
             />
-            <span className="text-sm font-medium">Verified Property</span>
+            <span className="text-sm font-medium">Verified Listing</span>
           </label>
+
+          <label className="flex items-center space-x-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              checked={showOnHomepage} 
+              onChange={(e) => setShowOnHomepage(e.target.checked)}
+              className="h-5 w-5 rounded border-input bg-background text-primary" 
+            />
+            <span className="text-sm font-medium">Show On Homepage</span>
+          </label>
+
+          <label className="flex items-center space-x-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              checked={featuredInBrowse} 
+              onChange={(e) => setFeaturedInBrowse(e.target.checked)}
+              className="h-5 w-5 rounded border-input bg-background text-primary" 
+            />
+            <span className="text-sm font-medium">Featured In Browse</span>
+          </label>
+        </div>
+
+        <div className="space-y-2 max-w-xs">
+          <label className="text-sm font-medium">Priority Order (Higher number = higher priority)</label>
+          <input 
+            type="number" 
+            value={priorityOrder} 
+            onChange={(e) => setPriorityOrder(Number(e.target.value))} 
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" 
+            placeholder="0" 
+          />
         </div>
       </div>
 

@@ -82,8 +82,8 @@ export const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <Link href="/plots">
-                <Button variant="primary" size="lg">Browse Plots</Button>
+              <Link href="/browse">
+                <Button variant="primary" size="lg">Browse</Button>
               </Link>
               <Link href="/sell">
                 <Button variant="secondary" size="lg">Sell Property</Button>
@@ -98,17 +98,13 @@ export const Hero = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, type: "spring" }}
           >
-            <motion.div 
-              animate={{ y: [0, -15, 0] }} 
-              transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-              className={styles.floatingImageWrapper}
-            >
+            <div className={styles.floatingImageWrapper}>
               <img 
                 src="/home.png" 
                 alt="Floating Luxury Property" 
                 className={styles.heroImage}
               />
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>

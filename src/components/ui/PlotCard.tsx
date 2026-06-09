@@ -16,6 +16,8 @@ interface PlotCardProps {
   size: string;
   type: string;
   verified: boolean;
+  featured?: boolean;
+  category?: string;
   image: string;
 }
 
@@ -27,6 +29,8 @@ export const PlotCard: React.FC<PlotCardProps> = ({
   size,
   type,
   verified,
+  featured,
+  category,
   image,
 }) => {
   const linkHref = slug.includes('/') ? `/${slug}` : `/property/${slug}`;
@@ -48,10 +52,16 @@ export const PlotCard: React.FC<PlotCardProps> = ({
           />
         </div>
         <div className={styles.badges}>
+          {category && <span className={styles.badgeCategory}>{category}</span>}
           <span className={styles.badgeType}>{type}</span>
           {verified && (
             <span className={styles.badgeVerified}>
               <ShieldCheck size={14} /> Verified
+            </span>
+          )}
+          {featured && (
+            <span className={styles.badgeFeatured}>
+              Featured
             </span>
           )}
         </div>
