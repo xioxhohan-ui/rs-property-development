@@ -24,18 +24,21 @@ interface InquiryCRMClientProps {
   inquiryId: string;
   initialStatus: string;
   initialNotes: string;
+  type: string;
 }
 
-export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes }: InquiryCRMClientProps) {
+export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes, type }: InquiryCRMClientProps) {
   const [status, setStatus] = useState(initialStatus || 'new');
   const [notes, setNotes] = useState(initialNotes || '');
   const [isSaving, setIsSaving] = useState(false);
   const toast = useToast();
 
+  const colName = type === 'seller' ? 'seller_inquiries' : 'property_inquiries';
+
   const handleStatusChange = async (newStatus: string) => {
     try {
       setStatus(newStatus);
-      await updateDoc(doc(dbClient, 'property_inquiries', inquiryId), { status: newStatus });
+      await updateDoc(doc(dbClient, colName, inquiryId), { status: newStatus });
       toast.success('Status Updated', `Inquiry moved to ${formatStatus(newStatus)}`);
     } catch (error) {
       toast.error('Update Failed', 'Failed to update inquiry status');
@@ -47,7 +50,7 @@ export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes }: Inq
     if (isSaving) return;
     setIsSaving(true);
     try {
-      await updateDoc(doc(dbClient, 'property_inquiries', inquiryId), { adminNotes: notes });
+      await updateDoc(doc(dbClient, colName, inquiryId), { adminNotes: notes });
       toast.success('Notes Saved successfully');
     } catch (error) {
       toast.error('Save Failed', 'Failed to save admin notes');
@@ -73,7 +76,7 @@ export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes }: Inq
                 onClick={() => handleStatusChange(s)}
                 className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
                   status === s 
-                    ? `${STATUS_COLORS[s]} border-transparent ring-2 ring-primary ring-offset-1 dark:ring-offset-background shadow-sm` 
+                    ? \`\${STATUS_COLORS[s]} border-transparent ring-2 ring-primary ring-offset-1 dark:ring-offset-background shadow-sm\` 
                     : 'bg-background text-muted-foreground hover:bg-muted border-input'
                 }`}
               >

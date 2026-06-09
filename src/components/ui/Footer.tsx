@@ -35,7 +35,7 @@ export const Footer = () => {
               <li><Link href="/">Home</Link></li>
               <li><Link href="/plots">Browse Plots</Link></li>
               <li><Link href="/map">Interactive Map</Link></li>
-              <li><Link href="/sell">Sell Property</Link></li>
+              <li><Link href="/become-a-seller">Become A Seller</Link></li>
               <li><Link href="/blog">Real Estate Blog</Link></li>
             </ul>
           </div>

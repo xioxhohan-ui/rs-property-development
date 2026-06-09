@@ -85,8 +85,8 @@ export const Hero = () => {
               <Link href="/browse">
                 <Button variant="primary" size="lg">Browse</Button>
               </Link>
-              <Link href="/sell">
-                <Button variant="secondary" size="lg">Sell Property</Button>
+              <Link href="/become-a-seller">
+                <Button variant="secondary" size="lg">Become A Seller</Button>
               </Link>
             </motion.div>
           </motion.div>

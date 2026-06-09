@@ -75,8 +75,8 @@ export const Navbar = () => {
               )}
             </Link>
           ))}
-          <Link href="/sell">
-            <Button variant="primary" size="sm">Sell Property</Button>
+          <Link href="/become-a-seller">
+            <Button variant="primary" size="sm">Become A Seller</Button>
           </Link>
         </nav>
 
@@ -110,8 +110,8 @@ export const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-              <Link href="/sell" onClick={() => setIsOpen(false)}>
-                <Button variant="primary" fullWidth>Sell Property</Button>
+              <Link href="/become-a-seller" onClick={() => setIsOpen(false)}>
+                <Button variant="primary" fullWidth>Become A Seller</Button>
               </Link>
             </div>
           </motion.div>

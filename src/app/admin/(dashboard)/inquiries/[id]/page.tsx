@@ -1,14 +1,15 @@
 import React from 'react';
 import { db } from '@/lib/firebase/admin';
 import { notFound } from 'next/navigation';
-import { Phone, Mail, MessageCircle, ArrowLeft, Building2, MapPin, Calendar, CheckCircle2, Link as LinkIcon, User } from 'lucide-react';
+import { Phone, Mail, MessageCircle, ArrowLeft, Building2, MapPin, Calendar, CheckCircle2, Link as LinkIcon, User, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-async function getInquiry(id: string) {
+async function getInquiry(id: string, type: string) {
   try {
-    const doc = await db.collection('property_inquiries').doc(id).get();
+    const colName = type === 'seller' ? 'seller_inquiries' : 'property_inquiries';
+    const doc = await db.collection(colName).doc(id).get();
     if (!doc.exists) return null;
     return { id: doc.id, ...doc.data() } as any;
   } catch (error) {
@@ -31,16 +32,34 @@ const STATUS_COLORS: Record<string, string> = {
   'sold': 'bg-green-100 text-green-800 border-green-200',
 };
 
-export default async function InquiryDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function InquiryDetailPage({ 
+  params,
+  searchParams 
+}: { 
+  params: Promise<{ id: string }>,
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const { id } = await params;
-  const inquiry = await getInquiry(id);
+  const sp = await searchParams;
+  const type = (sp.type as string) || 'property';
+
+  const inquiry = await getInquiry(id, type);
 
   if (!inquiry) {
     notFound();
   }
 
-  const propertyUrl = `/${inquiry.category?.toLowerCase().replace(' ', '-')}/${inquiry.propertySlug}`;
-  const whatsappLink = `https://wa.me/${inquiry.customerPhone?.replace(/[^0-9]/g, '')}`;
+  const isSeller = type === 'seller';
+
+  const propertyUrl = inquiry.propertySlug && inquiry.category 
+    ? \`/\${inquiry.category.toLowerCase().replace(' ', '-')}/\${inquiry.propertySlug}\`
+    : null;
+    
+  const customerPhone = inquiry.customerPhone || inquiry.phone || '';
+  const customerName = inquiry.customerName || inquiry.fullName || 'Unknown';
+  const customerEmail = inquiry.customerEmail || inquiry.email || '';
+  const message = inquiry.message || inquiry.description || 'No message provided.';
+  const whatsappLink = \`https://wa.me/\${customerPhone.replace(/[^0-9]/g, '')}\`;
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -53,8 +72,10 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
         </Link>
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">Inquiry Details</h1>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${STATUS_COLORS[inquiry.status] || 'bg-gray-100'}`}>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {isSeller ? 'Seller Inquiry Details' : 'Property Inquiry Details'}
+            </h1>
+            <span className={\`px-3 py-1 rounded-full text-xs font-semibold border \${STATUS_COLORS[inquiry.status] || 'bg-gray-100'}\`}>
               {formatStatus(inquiry.status)}
             </span>
           </div>
@@ -74,13 +95,13 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-5 py-4 border-b">
               <h3 className="font-semibold flex items-center gap-2">
-                <User className="h-4 w-4 text-primary" /> Customer Profile
+                <User className="h-4 w-4 text-primary" /> {isSeller ? 'Seller Profile' : 'Customer Profile'}
               </h3>
             </div>
             <div className="p-5 space-y-4">
               <div>
                 <label className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1 block">Full Name</label>
-                <div className="font-medium text-lg">{inquiry.customerName}</div>
+                <div className="font-medium text-lg">{customerName}</div>
               </div>
               
               <div className="pt-3 border-t">
@@ -89,17 +110,26 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm">
                       <Phone className="h-4 w-4 text-muted-foreground" />
-                      {inquiry.customerPhone}
+                      {customerPhone}
                     </div>
-                    <a href={`tel:${inquiry.customerPhone}`} className="text-xs font-medium text-blue-600 hover:underline">Call</a>
+                    <a href={\`tel:\${customerPhone}\`} className="text-xs font-medium text-blue-600 hover:underline">Call</a>
                   </div>
-                  {inquiry.customerEmail && (
+                  {customerEmail && (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-sm">
                         <Mail className="h-4 w-4 text-muted-foreground" />
-                        <span className="truncate max-w-[150px]">{inquiry.customerEmail}</span>
+                        <span className="truncate max-w-[150px]">{customerEmail}</span>
                       </div>
-                      <a href={`mailto:${inquiry.customerEmail}`} className="text-xs font-medium text-blue-600 hover:underline">Email</a>
+                      <a href={\`mailto:\${customerEmail}\`} className="text-xs font-medium text-blue-600 hover:underline">Email</a>
+                    </div>
+                  )}
+                  {inquiry.whatsapp && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm">
+                        <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                        <span className="truncate max-w-[150px]">{inquiry.whatsapp} (WhatsApp)</span>
+                      </div>
+                      <a href={\`https://wa.me/\${inquiry.whatsapp.replace(/[^0-9]/g, '')}\`} target="_blank" className="text-xs font-medium text-[#25D366] hover:underline">Chat</a>
                     </div>
                   )}
                 </div>
@@ -108,8 +138,8 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
               <div className="pt-3 border-t">
                 <label className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1 block">Preferred Method</label>
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary text-xs font-medium">
-                  {inquiry.preferredContactMethod === 'WhatsApp' ? <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" /> : <Phone className="h-3.5 w-3.5 text-primary" />}
-                  {inquiry.preferredContactMethod || 'Phone Call'}
+                  {inquiry.preferredContactMethod === 'WhatsApp' || isSeller ? <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" /> : <Phone className="h-3.5 w-3.5 text-primary" />}
+                  {inquiry.preferredContactMethod || (isSeller ? 'Any' : 'Phone Call')}
                 </div>
               </div>
             </div>
@@ -119,30 +149,50 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-5 py-4 border-b">
               <h3 className="font-semibold flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-primary" /> Property Interested In
+                <Building2 className="h-4 w-4 text-primary" /> {isSeller ? 'Property Being Sold' : 'Property Interested In'}
               </h3>
             </div>
             <div className="p-5 space-y-4">
               <div>
                 <div className="font-medium text-primary text-lg leading-tight mb-2">
-                  <a href={propertyUrl} target="_blank" rel="noreferrer" className="hover:underline inline-flex items-start gap-2">
-                    {inquiry.propertyTitle}
-                    <LinkIcon className="h-3.5 w-3.5 mt-1 flex-shrink-0" />
-                  </a>
+                  {propertyUrl ? (
+                    <a href={propertyUrl} target="_blank" rel="noreferrer" className="hover:underline inline-flex items-start gap-2">
+                      {inquiry.propertyTitle}
+                      <LinkIcon className="h-3.5 w-3.5 mt-1 flex-shrink-0" />
+                    </a>
+                  ) : (
+                    <span>{inquiry.propertyTitle}</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold bg-secondary">
                     {inquiry.category}
                   </span>
-                  <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-0.5 rounded">
-                    ID: {inquiry.propertyId?.slice(0, 8)}
-                  </span>
+                  {inquiry.propertyId && (
+                    <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-0.5 rounded">
+                      ID: {inquiry.propertyId.slice(0, 8)}
+                    </span>
+                  )}
                 </div>
               </div>
+
+              {isSeller && (
+                <div className="space-y-2 mt-4 text-sm border-t pt-3">
+                  <p><strong>District:</strong> {inquiry.district}</p>
+                  <p><strong>Area:</strong> {inquiry.area}</p>
+                  <p><strong>Address:</strong> {inquiry.address}</p>
+                  <p><strong>Expected Price:</strong> BDT {inquiry.expectedPrice}</p>
+                  {inquiry.googleMapUrl && (
+                    <a href={inquiry.googleMapUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center gap-1 mt-2">
+                      <ExternalLink className="h-3 w-3" /> View on Map
+                    </a>
+                  )}
+                </div>
+              )}
               
               <div className="pt-3 border-t text-sm text-muted-foreground flex justify-between">
-                <span>Source: <span className="text-foreground font-medium">{inquiry.source || 'Website'}</span></span>
-                <span>Region: <span className="text-foreground font-medium">{inquiry.ipRegion || 'Unknown'}</span></span>
+                <span>Source: <span className="text-foreground font-medium">{inquiry.source || (isSeller ? 'Seller Form' : 'Website')}</span></span>
+                {inquiry.ipRegion && <span>Region: <span className="text-foreground font-medium">{inquiry.ipRegion}</span></span>}
               </div>
             </div>
           </div>
@@ -156,14 +206,14 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           <div className="bg-card border rounded-xl shadow-sm p-5">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Quick Actions</h3>
             <div className="flex flex-wrap gap-3">
-              <a href={`tel:${inquiry.customerPhone}`} className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
-                <Phone className="h-4 w-4" /> Call Customer
+              <a href={\`tel:\${customerPhone}\`} className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
+                <Phone className="h-4 w-4" /> Call {isSeller ? 'Seller' : 'Customer'}
               </a>
               <a href={whatsappLink} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white h-11 px-6 rounded-md text-sm font-medium hover:bg-[#20b858] transition-colors shadow-sm">
                 <MessageCircle className="h-4 w-4" /> Open WhatsApp
               </a>
-              {inquiry.customerEmail && (
-                <a href={`mailto:${inquiry.customerEmail}`} className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-secondary/80 transition-colors">
+              {customerEmail && (
+                <a href={\`mailto:\${customerEmail}\`} className="inline-flex items-center justify-center gap-2 bg-secondary text-secondary-foreground h-11 px-6 rounded-md text-sm font-medium hover:bg-secondary/80 transition-colors">
                   <Mail className="h-4 w-4" /> Send Email
                 </a>
               )}
@@ -174,18 +224,26 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           <div className="bg-card border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-muted/50 px-5 py-4 border-b">
               <h3 className="font-semibold flex items-center gap-2">
-                <MessageCircle className="h-4 w-4 text-primary" /> Customer Message
+                <MessageCircle className="h-4 w-4 text-primary" /> {isSeller ? 'Property Description / Notes' : 'Customer Message'}
               </h3>
             </div>
             <div className="p-5">
               <div className="bg-blue-50/50 dark:bg-blue-950/20 text-foreground rounded-lg p-4 text-sm whitespace-pre-wrap leading-relaxed border border-blue-100 dark:border-blue-900/50">
-                {inquiry.message || 'No message provided.'}
+                {message}
               </div>
+              {isSeller && inquiry.notes && (
+                <div className="mt-4 pt-4 border-t">
+                  <h4 className="font-medium mb-2 text-sm">Additional Notes:</h4>
+                  <div className="bg-muted/30 text-foreground rounded-lg p-4 text-sm whitespace-pre-wrap leading-relaxed border border-border">
+                    {inquiry.notes}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Interactive CRM Client Component (Status & Notes) */}
-          <InquiryCRMClient inquiryId={inquiry.id} initialStatus={inquiry.status} initialNotes={inquiry.adminNotes} />
+          <InquiryCRMClient inquiryId={inquiry.id} initialStatus={inquiry.status} initialNotes={inquiry.adminNotes} type={type} />
 
         </div>
       </div>

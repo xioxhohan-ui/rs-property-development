@@ -60,7 +60,7 @@ export function HomepageRealtimeFeed() {
       const unsubscribe = onSnapshot(q, 
         (snapshot) => handleSnapshot(colName, snapshot),
         (error) => {
-          console.warn(`Error with complex query on ${colName}, falling back to simple query:`, error);
+          console.warn(`Error with complex query on ${colName}, falling back to simple query`);
           const fallbackUnsub = onSnapshot(fallbackQ, 
             (snap) => handleSnapshot(colName, snap),
             (err) => console.error(`Fallback query failed on ${colName}:`, err)

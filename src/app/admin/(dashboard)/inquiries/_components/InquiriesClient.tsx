@@ -23,15 +23,19 @@ const formatStatus = (status: string) => {
 
 export default function InquiriesClient() {
   const [inquiries, setInquiries] = useState<any[]>([]);
+  const [sellerInquiries, setSellerInquiries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSeller, setLoadingSeller] = useState(true);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState<'property' | 'seller'>('property');
   const router = useRouter();
   
   const toast = useToast();
 
   useEffect(() => {
-    const q = query(collection(dbClient, 'property_inquiries'), orderBy('createdAt', 'desc'));
+    // Listen to property inquiries
+    const qProp = query(collection(dbClient, 'property_inquiries'), orderBy('createdAt', 'desc'));
     
     if (typeof window !== 'undefined' && 'Notification' in window) {
       if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
@@ -39,35 +43,57 @@ export default function InquiriesClient() {
       }
     }
 
-    let initialLoad = true;
+    let initialLoadProp = true;
 
-    const unsub = onSnapshot(q, (snap) => {
+    const unsubProp = onSnapshot(qProp, (snap) => {
       const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       setInquiries(data);
       setLoading(false);
 
-      if (!initialLoad) {
+      if (!initialLoadProp) {
         snap.docChanges().forEach(change => {
           if (change.type === 'added') {
             const inq = change.doc.data();
-            toast.info('New Inquiry Received!', `${inq.customerName} is interested in ${inq.propertyTitle}`);
-            
+            toast.info('New Property Inquiry!', `${inq.customerName} is interested in ${inq.propertyTitle}`);
             if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-              new Notification('New Lead: RS Property', {
-                body: `${inq.customerName} inquired about ${inq.propertyTitle}`,
-                icon: '/favicon.ico'
-              });
+              new Notification('New Lead: RS Property', { body: `${inq.customerName} inquired about ${inq.propertyTitle}` });
             }
           }
         });
       }
-      initialLoad = false;
+      initialLoadProp = false;
     });
 
-    return () => unsub();
+    // Listen to seller inquiries
+    const qSeller = query(collection(dbClient, 'seller_inquiries'), orderBy('createdAt', 'desc'));
+    let initialLoadSeller = true;
+
+    const unsubSeller = onSnapshot(qSeller, (snap) => {
+      const data = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setSellerInquiries(data);
+      setLoadingSeller(false);
+
+      if (!initialLoadSeller) {
+        snap.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            const inq = change.doc.data();
+            toast.info('New Seller Inquiry!', `${inq.fullName} wants to sell ${inq.propertyTitle}`);
+            if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+              new Notification('New Seller Inquiry', { body: `${inq.fullName} submitted a property` });
+            }
+          }
+        });
+      }
+      initialLoadSeller = false;
+    });
+
+    return () => {
+      unsubProp();
+      unsubSeller();
+    };
   }, [toast]);
 
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
+  const handleDelete = async (id: string, e: React.MouseEvent, type: 'property'|'seller') => {
     e.stopPropagation();
     const ok = await toast.confirm({
       title: 'Delete Inquiry',
@@ -78,38 +104,55 @@ export default function InquiriesClient() {
     if (!ok) return;
 
     try {
-      await deleteDoc(doc(dbClient, 'property_inquiries', id));
+      await deleteDoc(doc(dbClient, type === 'property' ? 'property_inquiries' : 'seller_inquiries', id));
       toast.success('Inquiry Deleted');
     } catch (error) {
       toast.error('Delete Failed', 'Failed to delete inquiry');
     }
   };
 
-  const filteredInquiries = inquiries.filter(inq => {
+  const currentList = activeTab === 'property' ? inquiries : sellerInquiries;
+
+  const filteredInquiries = currentList.filter(inq => {
     if (filter !== 'All' && inq.status !== filter) return false;
     if (search) {
       const q = search.toLowerCase();
-      return (
-        (inq.customerName || '').toLowerCase().includes(q) ||
-        (inq.customerPhone || '').toLowerCase().includes(q) ||
-        (inq.propertyTitle || '').toLowerCase().includes(q)
-      );
+      const name = (inq.customerName || inq.fullName || '').toLowerCase();
+      const phone = (inq.customerPhone || inq.phone || '').toLowerCase();
+      const title = (inq.propertyTitle || '').toLowerCase();
+      return name.includes(q) || phone.includes(q) || title.includes(q);
     }
     return true;
   });
 
   const stats = {
-    total: inquiries.length,
-    new: inquiries.filter(i => i.status === 'new').length,
-    qualified: inquiries.filter(i => i.status === 'qualified').length,
-    conversion: inquiries.length > 0 ? Math.round((inquiries.filter(i => i.status === 'qualified' || i.status === 'sold').length / inquiries.length) * 100) : 0
+    total: currentList.length,
+    new: currentList.filter(i => i.status === 'new').length,
+    qualified: currentList.filter(i => i.status === 'qualified').length,
+    conversion: currentList.length > 0 ? Math.round((currentList.filter(i => i.status === 'qualified' || i.status === 'sold' || i.status === 'closed').length / currentList.length) * 100) : 0
   };
 
   return (
     <div className="space-y-6">
+      {/* Tabs */}
+      <div className="flex space-x-2 border-b border-border pb-2">
+        <button 
+          onClick={() => setActiveTab('property')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'property' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-muted-foreground'}`}
+        >
+          Property Inquiries
+        </button>
+        <button 
+          onClick={() => setActiveTab('seller')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'seller' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-muted-foreground'}`}
+        >
+          Seller Inquiries
+        </button>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-card border rounded-xl p-5 shadow-sm">
-          <div className="text-sm font-medium text-muted-foreground mb-1">Total Inquiries</div>
+          <div className="text-sm font-medium text-muted-foreground mb-1">Total {activeTab === 'property' ? 'Inquiries' : 'Sellers'}</div>
           <div className="text-3xl font-bold text-primary">{stats.total}</div>
         </div>
         <div className="bg-card border rounded-xl p-5 shadow-sm">
@@ -172,29 +215,29 @@ export default function InquiriesClient() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {loading ? (
+              {(activeTab === 'property' ? loading : loadingSeller) ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-8 text-center text-muted-foreground">Loading inquiries...</td>
+                  <td colSpan={6} className="px-5 py-8 text-center text-muted-foreground">Loading...</td>
                 </tr>
               ) : filteredInquiries.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center text-muted-foreground">
                     <div className="flex flex-col items-center justify-center">
                       <Search className="h-8 w-8 mb-2 opacity-20" />
-                      <p>No inquiries found matching your filters.</p>
+                      <p>No {activeTab === 'property' ? 'inquiries' : 'sellers'} found matching your filters.</p>
                     </div>
                   </td>
                 </tr>
               ) : (
                 filteredInquiries.map((inq) => (
-                  <tr key={inq.id} className={`hover:bg-muted/30 transition-colors cursor-pointer ${inq.status === 'new' ? 'bg-blue-50/30' : ''}`} onClick={() => router.push(`/admin/inquiries/${inq.id}`)}>
+                  <tr key={inq.id} className={`hover:bg-muted/30 transition-colors cursor-pointer ${inq.status === 'new' ? 'bg-blue-50/30' : ''}`} onClick={() => router.push(`/admin/inquiries/${inq.id}?type=${activeTab}`)}>
                     <td className="px-5 py-4">
-                      <div className="font-medium text-foreground">{inq.customerName}</div>
-                      <div className="text-xs text-muted-foreground">{inq.preferredContactMethod}</div>
+                      <div className="font-medium text-foreground">{inq.customerName || inq.fullName}</div>
+                      <div className="text-xs text-muted-foreground">{inq.preferredContactMethod || (activeTab === 'seller' ? 'Seller' : '')}</div>
                     </td>
                     <td className="px-5 py-4">
-                      <div className="text-foreground">{inq.customerPhone}</div>
-                      <div className="text-xs text-muted-foreground truncate max-w-[150px]">{inq.customerEmail}</div>
+                      <div className="text-foreground">{inq.customerPhone || inq.phone}</div>
+                      <div className="text-xs text-muted-foreground truncate max-w-[150px]">{inq.customerEmail || inq.email}</div>
                     </td>
                     <td className="px-5 py-4">
                       <div className="text-foreground font-medium truncate max-w-[200px]">{inq.propertyTitle}</div>
@@ -210,10 +253,10 @@ export default function InquiriesClient() {
                     </td>
                     <td className="px-5 py-4 text-right">
                       <div className="flex items-center justify-end gap-2" onClick={e => e.stopPropagation()}>
-                        <button onClick={(e) => { e.stopPropagation(); router.push(`/admin/inquiries/${inq.id}`); }} className="h-8 w-8 rounded flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
+                        <button onClick={(e) => { e.stopPropagation(); router.push(`/admin/inquiries/${inq.id}?type=${activeTab}`); }} className="h-8 w-8 rounded flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
                           <Eye className="h-4 w-4" />
                         </button>
-                        <button onClick={(e) => handleDelete(inq.id, e)} className="h-8 w-8 rounded flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
+                        <button onClick={(e) => handleDelete(inq.id, e, activeTab)} className="h-8 w-8 rounded flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
