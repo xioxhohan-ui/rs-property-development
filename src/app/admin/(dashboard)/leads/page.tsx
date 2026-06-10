@@ -1,7 +1,7 @@
 import React from 'react';
 import { db } from '@/lib/firebase/admin';
-import { Mail, Phone, MapPin, Search, Star, MessageSquare, TrendingUp } from 'lucide-react';
-
+import { Mail, Phone, MapPin, Search, Star, MessageSquare, TrendingUp, Eye } from 'lucide-react';
+import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 async function getLeads() {
@@ -105,9 +105,14 @@ export default async function AdminLeadsPage() {
                     </select>
                   </td>
                   <td className="p-4 align-middle text-right">
-                    <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-secondary h-8 w-8 text-primary border border-transparent hover:border-border" title="Add Note">
-                      <MessageSquare className="h-4 w-4" />
-                    </button>
+                    <div className="flex items-center justify-end gap-2">
+                      <Link href={`/admin/leads/${lead.id}`} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-primary/10 h-8 w-8 text-primary border border-transparent" title="View Details">
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                      <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-secondary h-8 w-8 text-primary border border-transparent hover:border-border" title="Add Note">
+                        <MessageSquare className="h-4 w-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

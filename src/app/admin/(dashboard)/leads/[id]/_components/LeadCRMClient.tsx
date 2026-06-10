@@ -7,41 +7,32 @@ import { useToast } from '@/components/ui/Toast';
 import { CheckCircle2, Save } from 'lucide-react';
 
 const STATUS_COLORS: Record<string, string> = {
-  'new': 'bg-blue-100 text-blue-800 border-blue-200',
-  'contacted': 'bg-amber-100 text-amber-800 border-amber-200',
-  'follow_up': 'bg-purple-100 text-purple-800 border-purple-200',
-  'qualified': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  'closed': 'bg-gray-100 text-gray-800 border-gray-200',
-  'sold': 'bg-green-100 text-green-800 border-green-200',
+  'New': 'bg-blue-100 text-blue-800 border-blue-200',
+  'Contacted': 'bg-amber-100 text-amber-800 border-amber-200',
+  'Qualified': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  'Lost': 'bg-gray-100 text-gray-800 border-gray-200',
+  'Converted': 'bg-green-100 text-green-800 border-green-200',
 };
 
-const formatStatus = (status: string) => {
-  if (!status) return 'New';
-  return status.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-};
-
-interface InquiryCRMClientProps {
-  inquiryId: string;
+interface LeadCRMClientProps {
+  leadId: string;
   initialStatus: string;
   initialNotes: string;
-  type: string;
 }
 
-export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes, type }: InquiryCRMClientProps) {
-  const [status, setStatus] = useState(initialStatus || 'new');
+export function LeadCRMClient({ leadId, initialStatus, initialNotes }: LeadCRMClientProps) {
+  const [status, setStatus] = useState(initialStatus || 'New');
   const [notes, setNotes] = useState(initialNotes || '');
   const [isSaving, setIsSaving] = useState(false);
   const toast = useToast();
 
-  const colName = type === 'seller' ? 'seller_inquiries' : type === 'lead' ? 'leads' : 'property_inquiries';
-
   const handleStatusChange = async (newStatus: string) => {
     try {
       setStatus(newStatus);
-      await updateDoc(doc(dbClient, colName, inquiryId), { status: newStatus });
-      toast.success('Status Updated', `Inquiry moved to ${formatStatus(newStatus)}`);
+      await updateDoc(doc(dbClient, 'leads', leadId), { status: newStatus });
+      toast.success('Status Updated', `Lead moved to ${newStatus}`);
     } catch (error) {
-      toast.error('Update Failed', 'Failed to update inquiry status');
+      toast.error('Update Failed', 'Failed to update lead status');
       setStatus(status); // revert
     }
   };
@@ -50,7 +41,7 @@ export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes, type 
     if (isSaving) return;
     setIsSaving(true);
     try {
-      await updateDoc(doc(dbClient, colName, inquiryId), { adminNotes: notes });
+      await updateDoc(doc(dbClient, 'leads', leadId), { adminNotes: notes });
       toast.success('Notes Saved successfully');
     } catch (error) {
       toast.error('Save Failed', 'Failed to save admin notes');
@@ -70,7 +61,7 @@ export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes, type 
         </div>
         <div className="p-5">
           <div className="flex flex-wrap gap-2">
-            {['new', 'contacted', 'follow_up', 'qualified', 'closed', 'sold'].map(s => (
+            {['New', 'Contacted', 'Qualified', 'Lost', 'Converted'].map(s => (
               <button
                 key={s}
                 onClick={() => handleStatusChange(s)}
@@ -80,7 +71,7 @@ export function InquiryCRMClient({ inquiryId, initialStatus, initialNotes, type 
                     : 'bg-background text-muted-foreground hover:bg-muted border-input'
                 }`}
               >
-                {formatStatus(s)}
+                {s}
               </button>
             ))}
           </div>
