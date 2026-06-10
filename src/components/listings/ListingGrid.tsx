@@ -93,7 +93,26 @@ export default function ListingGrid({
     if (priceRange) {
       const [min, max] = parsePriceRange(priceRange);
       list = list.filter(p => {
-        const price = Number(String(p.price || '0').replace(/[^0-9.]/g, ''));
+        const priceStr = String(p.price || '0').toLowerCase();
+        let multiplier = 1;
+        if (priceStr.includes('crore') || priceStr.includes('cr')) {
+          multiplier = 10000000;
+        } else if (priceStr.includes('lac') || priceStr.includes('lakh')) {
+          multiplier = 100000;
+        } else if (priceStr.includes('million')) {
+          multiplier = 1000000;
+        } else if (priceStr.includes('k') && !priceStr.includes('katha') && !priceStr.includes('koti')) {
+          multiplier = 1000;
+        }
+
+        const numericStr = priceStr.replace(/[^0-9.]/g, '');
+        let price = parseFloat(numericStr);
+        if (isNaN(price)) price = 0;
+
+        if (multiplier > 1 && price < 100000) {
+          price = price * multiplier;
+        }
+
         return price >= min && price <= max;
       });
     }
